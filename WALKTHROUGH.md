@@ -20,10 +20,15 @@ This document tracks the initial setup and verification of the 36-hour hackathon
 - Connected to remote origin: `https://github.com/devYahia/gdg-hackathon-2026.git`.
 - Configured local Git identity.
 
-### 4. Verification Test
+### 4. Deployment Configuration
+- Integrated `Dockerfile` optimized for Coolify.
+- Enabled `standalone` output in `next.config.mjs` for smaller image size.
+- Configured `.dockerignore` to protect sensitive files and reduce build context.
+
+### 5. Verification Test
 - Created a test page at `/test` to verify rendering and styling.
 - Removed all emojis and symbols from code and documentation to comply with project rules.
-- Verified successful push to the main branch.
+- Verified successful build and push to the main branch.
 
 ## Current Status
 - **Framework**: Next.js 14.2.16
