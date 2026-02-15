@@ -19,13 +19,13 @@ export function DashboardNavbar({ userEmail, userName }: DashboardNavbarProps) {
         .slice(0, 2)
 
     return (
-        <header className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-md">
+        <header className="sticky top-0 z-50 border-b border-white/10 bg-black/50 backdrop-blur-xl">
             <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
                 {/* Logo */}
-                <Link href="/dashboard" className="flex items-center gap-2">
-                    <Terminal className="h-5 w-5 text-primary" />
-                    <span className="text-lg font-bold tracking-tight">
-                        INTERNA<span className="text-primary">.</span>
+                <Link href="/dashboard" className="flex items-center gap-2 group">
+                    <Terminal className="h-5 w-5 text-purple-500 transition-transform group-hover:scale-110" />
+                    <span className="text-lg font-bold tracking-tight text-white">
+                        Interna<span className="text-purple-500">.</span>
                     </span>
                 </Link>
 
@@ -34,12 +34,12 @@ export function DashboardNavbar({ userEmail, userName }: DashboardNavbarProps) {
                     {/* Avatar */}
                     <div className="flex items-center gap-3">
                         <div className="hidden text-right sm:block">
-                            <p className="text-sm font-medium">{userName}</p>
-                            <p className="text-xs text-muted-foreground">
+                            <p className="text-sm font-medium text-white">{userName}</p>
+                            <p className="text-xs text-white/50">
                                 {userEmail}
                             </p>
                         </div>
-                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-purple-500/10 border border-purple-500/20 text-sm font-bold text-purple-400">
                             {initials}
                         </div>
                     </div>
@@ -49,7 +49,7 @@ export function DashboardNavbar({ userEmail, userName }: DashboardNavbarProps) {
                         <Button
                             variant="ghost"
                             size="icon"
-                            className="text-muted-foreground hover:text-foreground"
+                            className="text-white/50 hover:text-white hover:bg-white/5"
                         >
                             <LogOut className="h-4 w-4" />
                         </Button>

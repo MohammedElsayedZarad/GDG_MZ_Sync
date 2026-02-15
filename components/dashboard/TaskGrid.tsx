@@ -54,10 +54,10 @@ export function TaskGrid() {
                     ))}
                 </div>
             ) : (
-                <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border/50 py-16 text-center">
-                    <Sparkles className="mb-3 h-8 w-8 text-muted-foreground" />
-                    <p className="text-sm font-medium">No simulations found</p>
-                    <p className="mt-1 text-xs text-muted-foreground">
+                <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-white/10 py-16 text-center">
+                    <Sparkles className="mb-3 h-8 w-8 text-white/20" />
+                    <p className="text-sm font-medium text-white/60">No simulations found</p>
+                    <p className="mt-1 text-xs text-white/40">
                         Try adjusting your filters
                     </p>
                 </div>
