@@ -1,0 +1,49 @@
+"use client"
+
+import { motion } from "motion/react"
+import { AppSidebar } from "@/components/dashboard/AppSidebar"
+import { AppNavbar } from "@/components/dashboard/AppNavbar"
+import { SidebarProvider, useSidebar } from "@/components/dashboard/SidebarContext"
+
+function DashboardShellInner({
+  children,
+  userName,
+  userEmail,
+}: {
+  children: React.ReactNode
+  userName: string
+  userEmail: string
+}) {
+  const { width } = useSidebar()
+
+  return (
+    <>
+      <AppSidebar />
+      <motion.div
+        className="min-h-screen flex flex-col"
+        initial={false}
+        animate={{ marginLeft: width }}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      >
+        <AppNavbar userName={userName} userEmail={userEmail} />
+        <main className="flex-1 p-6">{children}</main>
+      </motion.div>
+    </>
+  )
+}
+
+interface DashboardShellProps {
+  children: React.ReactNode
+  userName: string
+  userEmail: string
+}
+
+export function DashboardShell({ children, userName, userEmail }: DashboardShellProps) {
+  return (
+    <SidebarProvider>
+      <DashboardShellInner userName={userName} userEmail={userEmail}>
+        {children}
+      </DashboardShellInner>
+    </SidebarProvider>
+  )
+}

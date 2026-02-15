@@ -1,105 +1,153 @@
 "use client"
 
+import { motion } from "motion/react"
 import { Search } from "lucide-react"
 
 import { Input } from "@/components/ui/input"
 
-import { FIELD_CONFIG, type TaskField, type TaskDifficulty } from "@/lib/tasks"
+import { FIELD_CONFIG, LEVEL_CONFIG, type TaskField, type TaskDifficulty } from "@/lib/tasks"
+
+export type MultiSelectFilters = {
+    tracks: TaskField[]
+    difficulties: TaskDifficulty[]
+    levels: number[]
+}
 
 interface TaskFiltersProps {
-    selectedField: TaskField | "all"
-    selectedDifficulty: TaskDifficulty | "all"
+    selectedTracks: TaskField[]
+    selectedDifficulties: TaskDifficulty[]
+    selectedLevels: number[]
     searchQuery: string
-    onFieldChange: (field: TaskField | "all") => void
-    onDifficultyChange: (difficulty: TaskDifficulty | "all") => void
+    onTracksChange: (tracks: TaskField[]) => void
+    onDifficultiesChange: (difficulties: TaskDifficulty[]) => void
+    onLevelsChange: (levels: number[]) => void
     onSearchChange: (query: string) => void
 }
 
-const DIFFICULTY_OPTIONS = [
-    { value: "all" as const, label: "All Levels" },
-    { value: "easy" as const, label: "Easy" },
-    { value: "medium" as const, label: "Medium" },
-    { value: "hard" as const, label: "Hard" },
+const DIFFICULTY_OPTIONS: { value: TaskDifficulty; label: string }[] = [
+    { value: "easy", label: "Easy" },
+    { value: "medium", label: "Medium" },
+    { value: "hard", label: "Hard" },
 ]
 
+function toggleInArray<T>(arr: T[], item: T): T[] {
+    if (arr.includes(item)) return arr.filter((x) => x !== item)
+    return [...arr, item]
+}
+
 export function TaskFilters({
-    selectedField,
-    selectedDifficulty,
+    selectedTracks,
+    selectedDifficulties,
+    selectedLevels,
     searchQuery,
-    onFieldChange,
-    onDifficultyChange,
+    onTracksChange,
+    onDifficultiesChange,
+    onLevelsChange,
     onSearchChange,
 }: TaskFiltersProps) {
     return (
-        <div className="space-y-4">
+        <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35 }}
+            className="space-y-5 rounded-2xl border border-border bg-card/50 p-5 shadow-sm"
+        >
             {/* Search */}
             <div className="relative">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/50" />
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
-                    placeholder="Search simulations..."
+                    placeholder="Search projects, client personas, tools..."
                     value={searchQuery}
                     onChange={(e) => onSearchChange(e.target.value)}
-                    className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-white/20 focus:border-purple-500/50 focus:ring-purple-500/20"
+                    className="h-11 pl-10 rounded-xl border-border bg-muted/50 text-foreground placeholder:text-muted-foreground focus:bg-background focus:ring-2 focus:ring-primary/20 dark:focus:bg-muted/30"
                 />
             </div>
 
-            {/* Field Filter Pills */}
-            <div className="flex flex-wrap gap-2">
-                <button
-                    type="button"
-                    onClick={() => onFieldChange("all")}
-                    className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-all ${selectedField === "all"
-                        ? "border-purple-500 bg-purple-500/20 text-purple-200 shadow-[0_0_10px_-4px_rgba(168,85,247,0.5)]"
-                        : "border-white/10 bg-white/5 text-white/60 hover:border-white/20 hover:text-white"
-                        }`}
-                >
-                    All Fields
-                </button>
-                {Object.entries(FIELD_CONFIG).map(([key, config]) => {
-                    const Icon = config.icon
-                    const isSelected = selectedField === key
-                    // Map config colors to our dark theme
-                    let activeClass = ""
-                    if (isSelected) {
-                        if (config.color.includes("emerald")) activeClass = "border-emerald-500 bg-emerald-500/20 text-emerald-200 shadow-[0_0_10px_-4px_rgba(16,185,129,0.5)]"
-                        else if (config.color.includes("blue")) activeClass = "border-blue-500 bg-blue-500/20 text-blue-200 shadow-[0_0_10px_-4px_rgba(59,130,246,0.5)]"
-                        else if (config.color.includes("purple")) activeClass = "border-purple-500 bg-purple-500/20 text-purple-200 shadow-[0_0_10px_-4px_rgba(168,85,247,0.5)]"
-                        else activeClass = "border-white bg-white/20 text-white"
-                    }
-
-                    return (
-                        <button
-                            key={key}
-                            type="button"
-                            onClick={() => onFieldChange(key as TaskField)}
-                            className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-all ${isSelected
-                                ? activeClass
-                                : "border-white/10 bg-white/5 text-white/60 hover:border-white/20 hover:text-white"
-                                }`}
-                        >
-                            <Icon className="h-3 w-3" />
-                            {config.label}
-                        </button>
-                    )
-                })}
+            {/* Tracks (multi-select pills) */}
+            <div>
+                <p className="mb-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">Tracks</p>
+                <div className="flex flex-wrap gap-2">
+                    {Object.entries(FIELD_CONFIG).map(([key, config]) => {
+                        const Icon = config.icon
+                        const isSelected = selectedTracks.length === 0 || selectedTracks.includes(key as TaskField)
+                        const isExplicitlySelected = selectedTracks.includes(key as TaskField)
+                        const showActive = selectedTracks.length === 0 ? true : isExplicitlySelected
+                        let activeClass = "border-border bg-muted/50 text-muted-foreground hover:border-primary/30 hover:text-foreground"
+                        if (showActive) {
+                            if (config.color.includes("blue")) activeClass = "border-blue-500/50 bg-blue-500/15 text-blue-600 dark:text-blue-400 shadow-sm"
+                            else if (config.color.includes("green")) activeClass = "border-green-500/50 bg-green-500/15 text-green-600 dark:text-green-400 shadow-sm"
+                            else if (config.color.includes("purple")) activeClass = "border-purple-500/50 bg-purple-500/15 text-purple-600 dark:text-purple-400 shadow-sm"
+                            else if (config.color.includes("orange")) activeClass = "border-orange-500/50 bg-orange-500/15 text-orange-600 dark:text-orange-400 shadow-sm"
+                            else if (config.color.includes("cyan")) activeClass = "border-cyan-500/50 bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 shadow-sm"
+                            else if (config.color.includes("pink")) activeClass = "border-pink-500/50 bg-pink-500/15 text-pink-600 dark:text-pink-400 shadow-sm"
+                        }
+                        return (
+                            <button
+                                key={key}
+                                type="button"
+                                onClick={() => onTracksChange(toggleInArray(selectedTracks, key as TaskField))}
+                                className={`flex items-center gap-1.5 rounded-full border px-3 py-2 text-xs font-medium transition-all duration-200 hover:scale-[1.02] ${activeClass}`}
+                            >
+                                <Icon className="h-3.5 w-3.5" />
+                                {config.label}
+                                {isExplicitlySelected && selectedTracks.length > 0 && (
+                                    <span className="ml-0.5 text-[10px] opacity-80">✓</span>
+                                )}
+                            </button>
+                        )
+                    })}
+                </div>
             </div>
 
-            {/* Difficulty Filter */}
-            <div className="flex gap-2">
-                {DIFFICULTY_OPTIONS.map((opt) => (
-                    <button
-                        key={opt.value}
-                        type="button"
-                        onClick={() => onDifficultyChange(opt.value)}
-                        className={`rounded-lg border px-3 py-1.5 text-xs font-medium transition-all ${selectedDifficulty === opt.value
-                            ? "border-purple-500 bg-purple-500/20 text-purple-200"
-                            : "border-white/10 bg-white/5 text-white/60 hover:border-white/20 hover:text-white"
-                            }`}
-                    >
-                        {opt.label}
-                    </button>
-                ))}
+            {/* Difficulty (multi-select) */}
+            <div>
+                <p className="mb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Project difficulty</p>
+                <div className="flex flex-wrap gap-2">
+                    {DIFFICULTY_OPTIONS.map((opt) => {
+                        const isExplicitlySelected = selectedDifficulties.includes(opt.value)
+                        const showActive = selectedDifficulties.length === 0 ? true : isExplicitlySelected
+                        return (
+                            <button
+                                key={opt.value}
+                                type="button"
+                                onClick={() => onDifficultiesChange(toggleInArray(selectedDifficulties, opt.value))}
+                                className={`rounded-xl border px-3 py-2 text-xs font-medium transition-all duration-200 hover:scale-[1.02] ${showActive
+                                    ? "border-primary bg-primary/15 text-primary shadow-sm"
+                                    : "border-border bg-muted/50 text-muted-foreground hover:border-primary/30 hover:text-foreground"
+                                    }`}
+                            >
+                                {opt.label}
+                                {isExplicitlySelected && selectedDifficulties.length > 0 && " ✓"}
+                            </button>
+                        )
+                    })}
+                </div>
             </div>
-        </div>
+
+            {/* Levels (multi-select) */}
+            <div>
+                <p className="mb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Levels</p>
+                <div className="flex flex-wrap gap-2">
+                    {LEVEL_CONFIG.map((lvl) => {
+                        const isExplicitlySelected = selectedLevels.includes(lvl.levelNumber)
+                        const showActive = selectedLevels.length === 0 ? true : isExplicitlySelected
+                        return (
+                            <button
+                                key={lvl.levelNumber}
+                                type="button"
+                                onClick={() => onLevelsChange(toggleInArray(selectedLevels, lvl.levelNumber))}
+                                className={`rounded-xl border px-3 py-2 text-xs font-medium transition-all duration-200 hover:scale-[1.02] ${showActive
+                                    ? "border-amber-500/50 bg-amber-500/15 text-amber-600 dark:text-amber-400 shadow-sm"
+                                    : "border-border bg-muted/50 text-muted-foreground hover:border-amber-500/30 hover:text-foreground"
+                                    }`}
+                            >
+                                L{lvl.levelNumber}
+                                {isExplicitlySelected && selectedLevels.length > 0 && " ✓"}
+                            </button>
+                        )
+                    })}
+                </div>
+            </div>
+        </motion.div>
     )
 }
