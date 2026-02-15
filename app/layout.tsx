@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { Inter, JetBrains_Mono, MuseoModerno } from "next/font/google"
-import { Toaster } from "sonner"
+import { ThemeProvider } from "@/components/providers/ThemeProvider"
+import { ThemeToaster } from "@/components/providers/ThemeToaster"
 import "./globals.css"
 
 const inter = Inter({
@@ -37,12 +38,14 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${jetbrains.variable} ${museoModerno.variable} font-sans antialiased`}
+        className={`${inter.variable} ${jetbrains.variable} ${museoModerno.variable} font-sans antialiased bg-background text-foreground`}
       >
-        {children}
-        <Toaster theme="dark" position="top-center" richColors />
+        <ThemeProvider>
+          {children}
+          <ThemeToaster />
+        </ThemeProvider>
       </body>
     </html>
   )

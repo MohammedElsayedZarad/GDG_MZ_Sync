@@ -1,28 +1,24 @@
 "use client"
 
 import { useState, useMemo } from "react"
-import { Sparkles } from "lucide-react"
+import { motion } from "motion/react"
+import { Sparkles, FolderKanban } from "lucide-react"
 
 import { TaskCard } from "@/components/dashboard/TaskCard"
 import { TaskFilters } from "@/components/dashboard/TaskFilters"
 import { TASKS, type TaskField, type TaskDifficulty } from "@/lib/tasks"
 
 export function TaskGrid() {
-    const [selectedField, setSelectedField] = useState<TaskField | "all">("all")
-    const [selectedDifficulty, setSelectedDifficulty] = useState<
-        TaskDifficulty | "all"
-    >("all")
+    const [selectedTracks, setSelectedTracks] = useState<TaskField[]>([])
+    const [selectedDifficulties, setSelectedDifficulties] = useState<TaskDifficulty[]>([])
+    const [selectedLevels, setSelectedLevels] = useState<number[]>([])
     const [searchQuery, setSearchQuery] = useState("")
 
     const filteredTasks = useMemo(() => {
         return TASKS.filter((task) => {
-            if (selectedField !== "all" && task.field !== selectedField)
-                return false
-            if (
-                selectedDifficulty !== "all" &&
-                task.difficulty !== selectedDifficulty
-            )
-                return false
+            if (selectedTracks.length > 0 && !selectedTracks.includes(task.field)) return false
+            if (selectedDifficulties.length > 0 && !selectedDifficulties.includes(task.difficulty)) return false
+            if (selectedLevels.length > 0 && !selectedLevels.includes(task.level)) return false
             if (searchQuery) {
                 const q = searchQuery.toLowerCase()
                 return (
@@ -34,33 +30,68 @@ export function TaskGrid() {
             }
             return true
         })
-    }, [selectedField, selectedDifficulty, searchQuery])
+    }, [selectedTracks, selectedDifficulties, selectedLevels, searchQuery])
 
     return (
         <div className="space-y-6">
+            <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="flex flex-wrap items-center gap-2"
+            >
+                <FolderKanban className="h-5 w-5 text-primary" />
+                <h2 className="text-lg font-semibold text-foreground">Projects</h2>
+                <span className="text-sm text-muted-foreground">Filter by track, difficulty & level</span>
+            </motion.div>
             <TaskFilters
-                selectedField={selectedField}
-                selectedDifficulty={selectedDifficulty}
+                selectedTracks={selectedTracks}
+                selectedDifficulties={selectedDifficulties}
+                selectedLevels={selectedLevels}
                 searchQuery={searchQuery}
-                onFieldChange={setSelectedField}
-                onDifficultyChange={setSelectedDifficulty}
+                onTracksChange={setSelectedTracks}
+                onDifficultiesChange={setSelectedDifficulties}
+                onLevelsChange={setSelectedLevels}
                 onSearchChange={setSearchQuery}
             />
 
             {filteredTasks.length > 0 ? (
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                    {filteredTasks.map((task) => (
-                        <TaskCard key={task.id} task={task} />
+                <motion.div
+                    layout
+                    className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+                    initial="hidden"
+                    animate="visible"
+                    variants={{
+                        visible: { transition: { staggerChildren: 0.05 } },
+                        hidden: {},
+                    }}
+                >
+                    {filteredTasks.map((task, i) => (
+                        <motion.div
+                            key={task.id}
+                            layout
+                            variants={{
+                                hidden: { opacity: 0, y: 12 },
+                                visible: { opacity: 1, y: 0 },
+                            }}
+                            transition={{ duration: 0.3 }}
+                        >
+                            <TaskCard task={task} />
+                        </motion.div>
                     ))}
-                </div>
+                </motion.div>
             ) : (
-                <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-white/10 py-16 text-center">
-                    <Sparkles className="mb-3 h-8 w-8 text-white/20" />
-                    <p className="text-sm font-medium text-white/60">No simulations found</p>
-                    <p className="mt-1 text-xs text-white/40">
-                        Try adjusting your filters
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-muted/20 py-16 text-center"
+                >
+                    <Sparkles className="mb-3 h-10 w-10 text-muted-foreground" />
+                    <p className="text-sm font-medium text-foreground">No projects found</p>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                        Try adjusting your filters or search
                     </p>
-                </div>
+                </motion.div>
             )}
         </div>
     )
