@@ -17,6 +17,24 @@ export type TaskField =
     | "data"
     | "design"
 
+/** Level combines customer-dealing difficulty and project technical difficulty */
+export interface TaskLevel {
+    levelNumber: number
+    customerDifficulty: TaskDifficulty
+    projectDifficulty: TaskDifficulty
+    label: string
+}
+
+export const LEVEL_CONFIG: TaskLevel[] = [
+    { levelNumber: 1, customerDifficulty: "easy", projectDifficulty: "easy", label: "Level 1 — Gentle start" },
+    { levelNumber: 2, customerDifficulty: "medium", projectDifficulty: "easy", label: "Level 2 — Tricky client" },
+    { levelNumber: 3, customerDifficulty: "easy", projectDifficulty: "medium", label: "Level 3 — Heavier task" },
+    { levelNumber: 4, customerDifficulty: "medium", projectDifficulty: "medium", label: "Level 4 — Balanced" },
+    { levelNumber: 5, customerDifficulty: "hard", projectDifficulty: "medium", label: "Level 5 — Demanding client" },
+    { levelNumber: 6, customerDifficulty: "medium", projectDifficulty: "hard", label: "Level 6 — Complex project" },
+    { levelNumber: 7, customerDifficulty: "hard", projectDifficulty: "hard", label: "Level 7 — Full challenge" },
+]
+
 export interface SimulationTask {
     id: string
     title: string
@@ -25,6 +43,9 @@ export interface SimulationTask {
     clientMood: string
     field: TaskField
     difficulty: TaskDifficulty
+    /** How difficult the client is to deal with (communication, changes, expectations) */
+    customerDifficulty: TaskDifficulty
+    level: number
     duration: string
     tools: string[]
 }
@@ -105,6 +126,8 @@ export const TASKS: SimulationTask[] = [
         clientMood: "Demanding",
         field: "frontend",
         difficulty: "easy",
+        customerDifficulty: "hard",
+        level: 2,
         duration: "30 min",
         tools: ["React", "CSS", "Figma"],
     },
@@ -117,6 +140,8 @@ export const TASKS: SimulationTask[] = [
         clientMood: "Meticulous",
         field: "backend",
         difficulty: "medium",
+        customerDifficulty: "medium",
+        level: 4,
         duration: "45 min",
         tools: ["Node.js", "PostgreSQL", "REST"],
     },
@@ -129,6 +154,8 @@ export const TASKS: SimulationTask[] = [
         clientMood: "Uncertain",
         field: "design",
         difficulty: "medium",
+        customerDifficulty: "hard",
+        level: 5,
         duration: "40 min",
         tools: ["Figma", "UI/UX", "Prototyping"],
     },
@@ -141,6 +168,8 @@ export const TASKS: SimulationTask[] = [
         clientMood: "Intense",
         field: "fullstack",
         difficulty: "hard",
+        customerDifficulty: "hard",
+        level: 7,
         duration: "60 min",
         tools: ["React", "D3.js", "WebSocket"],
     },
@@ -153,6 +182,8 @@ export const TASKS: SimulationTask[] = [
         clientMood: "Critical",
         field: "backend",
         difficulty: "hard",
+        customerDifficulty: "hard",
+        level: 7,
         duration: "50 min",
         tools: ["PostgreSQL", "ERD", "SQL"],
     },
@@ -165,7 +196,55 @@ export const TASKS: SimulationTask[] = [
         clientMood: "Frugal",
         field: "frontend",
         difficulty: "easy",
+        customerDifficulty: "medium",
+        level: 1,
         duration: "25 min",
         tools: ["HTML", "CSS", "JavaScript"],
     },
+    {
+        id: "auth-flow",
+        title: "Auth Flow & OAuth",
+        description:
+            "A security-conscious client wants login, signup, and OAuth integration. They keep asking for more providers and stricter validation.",
+        clientPersona: "Security-Focused Founder",
+        clientMood: "Cautious",
+        field: "fullstack",
+        difficulty: "medium",
+        customerDifficulty: "medium",
+        level: 4,
+        duration: "45 min",
+        tools: ["Next.js", "Supabase", "OAuth"],
+    },
+    {
+        id: "data-pipeline",
+        title: "ETL Data Pipeline",
+        description:
+            "A data team lead needs a small ETL pipeline with validation and error reporting. They speak in jargon and change specs often.",
+        clientPersona: "Jargon-Heavy Data Lead",
+        clientMood: "Vague",
+        field: "data",
+        difficulty: "hard",
+        customerDifficulty: "hard",
+        level: 6,
+        duration: "55 min",
+        tools: ["Python", "Pandas", "SQL"],
+    },
+    {
+        id: "mobile-auth-ui",
+        title: "Mobile Login Screens",
+        description:
+            "Product owner wants beautiful login/signup screens for their app. They have strong opinions on colors and copy.",
+        clientPersona: "Opinionated Product Owner",
+        clientMood: "Picky",
+        field: "mobile",
+        difficulty: "easy",
+        customerDifficulty: "medium",
+        level: 2,
+        duration: "35 min",
+        tools: ["React Native", "Figma"],
+    },
 ]
+
+export function getTaskById(id: string): SimulationTask | undefined {
+    return TASKS.find((t) => t.id === id)
+}

@@ -5,7 +5,7 @@ AI-Driven Virtual Internship Simulator -- GDG Hackathon 2026
 ## Tech Stack
 
 - **Frontend**: Next.js 14.2 (App Router), Tailwind CSS v3, Shadcn UI, Lucide React
-- **Backend**: Supabase (Postgres, Auth, Realtime)
+- **Backend**: FastAPI (Gemini AI chat + code review), Supabase (Postgres, Auth, Realtime)
 - **State**: Nuqs (URL state), Zustand (Global state)
 - **Language**: TypeScript (Strict mode)
 - **Deployment**: Coolify (auto-deploy on `git push`)
@@ -41,7 +41,8 @@ app/
     login/page.tsx            # Login page
     signup/page.tsx           # Multi-step signup + onboarding
   (dashboard)/
-    dashboard/page.tsx        # Main dashboard (server component, auth-guarded)
+    dashboard/page.tsx        # Home: project grid with multi-select filters (tracks, difficulty, levels)
+    project/[id]/page.tsx    # Project page: split view — AI customer chat (left) + IDE sandbox (right)
   auth/
     confirm/route.ts          # Email OTP confirmation callback
 
@@ -52,6 +53,10 @@ components/
     TaskCard.tsx
     TaskFilters.tsx
     TaskGrid.tsx
+  project/                    # Project page (split chat + IDE)
+    ProjectView.tsx
+    ProjectChat.tsx           # AI customer chat (Arabic + English via Gemini)
+    ProjectIDE.tsx            # Monaco editor + "Request AI review"
   landing/                    # Landing page components
     Features.tsx
     HeroMonitor.tsx
@@ -63,14 +68,15 @@ lib/
     middleware.ts             # Auth middleware (route protection)
     database.types.ts         # Generated DB types (auto-generated, do not edit)
     utils.ts                  # getCurrentUser(), isAuthenticated()
-  tasks.ts                    # Task definitions and field/difficulty configs
+  tasks.ts                    # Task definitions, levels, tracks, getTaskById()
+  api.ts                      # Frontend API client (chat, code review → FastAPI)
   utils.ts                    # cn() utility for Tailwind class merging
 
 hooks/
   use-toast.ts                # Toast hook
 
 middleware.ts                 # Next.js middleware entry point
-backend/                      # Python FastAPI backend (skeleton)
+backend/                      # FastAPI + Gemini: /api/chat (customer sim), /api/review (code review)
 ```
 
 ## Key Conventions
@@ -110,6 +116,17 @@ Types are auto-generated in `lib/supabase/database.types.ts`.
 |----------|----------|-------------|
 | `NEXT_PUBLIC_SUPABASE_URL` | Yes | Supabase project URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes | Supabase anonymous/public key |
+| `NEXT_PUBLIC_API_URL` | No | FastAPI backend URL (default: `http://127.0.0.1:8000`) |
+
+Backend (`backend/.env`): copy from `backend/.env.example`. Set `GEMINI_API_KEY` for AI chat and code review.
+
+## Project & AI Flow
+
+1. **Dashboard (home)** — Projects in tracks (frontend, backend, fullstack, mobile, data, design) with **multi-select filters** for tracks, project difficulty, and **levels** (Level 1–7: customer difficulty + project difficulty).
+2. **Click a project** → **Project page** (split layout):
+   - **Left**: AI customer chat (Gemini). Ask about the challenge or requirements. **Arabic or English** via toggle.
+   - **Right**: VS Code–style sandbox (Monaco). Write code and click **Request AI review**; Gemini reviews and returns feedback + approved/not approved.
+3. Backend: `cd backend && pip install -r requirements.txt && uvicorn main:app --reload`. Set `GEMINI_API_KEY` for full AI behavior.
 
 ## Scripts
 

@@ -1,5 +1,7 @@
 "use client"
 
+import Link from "next/link"
+import { motion } from "motion/react"
 import { Clock, Zap, ArrowRight } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -11,6 +13,7 @@ import {
     FIELD_CONFIG,
     DIFFICULTY_CONFIG,
 } from "@/lib/tasks"
+import { cn } from "@/lib/utils"
 
 interface TaskCardProps {
     task: SimulationTask
@@ -22,95 +25,102 @@ export function TaskCard({ task }: TaskCardProps) {
     const FieldIcon = fieldConfig.icon
 
     return (
-        <Card className="group glass-card border-white/5 bg-white/5 backdrop-blur-sm transition-all duration-300 hover:border-purple-500/30 hover:bg-white/10 hover:shadow-[0_0_20px_-5px_rgba(168,85,247,0.15)]">
-            <CardContent className="flex flex-col gap-4 p-5">
-                {/* Header: Field + Difficulty */}
-                <div className="flex items-center justify-between">
-                    <div
-                        className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium border ${fieldConfig.color === "text-emerald-500" ? "border-emerald-500/20 bg-emerald-500/10" :
-                            fieldConfig.color === "text-blue-500" ? "border-blue-500/20 bg-blue-500/10" :
-                                fieldConfig.color === "text-purple-500" ? "border-purple-500/20 bg-purple-500/10" :
-                                    "border-white/10 bg-white/5"
-                            } ${fieldConfig.color}`}
-                    >
-                        <FieldIcon className="h-3 w-3" />
-                        {fieldConfig.label}
-                    </div>
-                    <div className="flex items-center gap-1">
-                        {Array.from({ length: 3 }).map((_, i) => (
-                            <div
-                                key={i}
-                                className={`h-1.5 w-1.5 rounded-full ${i < diffConfig.dots
-                                    ? diffConfig.color.replace("text-", "bg-")
-                                    : "bg-white/10"
-                                    }`}
-                            />
-                        ))}
-                        <span
-                            className={`ml-1 text-xs ${diffConfig.color}`}
-                        >
-                            {diffConfig.label}
-                        </span>
-                    </div>
-                </div>
-
-                {/* Title */}
-                <h3 className="text-lg font-semibold leading-tight text-white group-hover:text-purple-200 transition-colors">
-                    {task.title}
-                </h3>
-
-                {/* Description */}
-                <p className="text-sm leading-relaxed text-white/60 line-clamp-2">
-                    {task.description}
-                </p>
-
-                {/* Client Persona */}
-                <div className="flex items-center gap-2 rounded-lg border border-white/5 bg-black/20 px-3 py-2">
-                    <Zap className="h-3.5 w-3.5 text-amber-400" />
-                    <span className="text-xs">
-                        <span className="text-white/40">Client: </span>
-                        <span className="font-medium text-white/80">{task.clientPersona}</span>
-                    </span>
-                    <Badge
-                        variant="secondary"
-                        className="ml-auto text-[10px] bg-white/5 text-white/70 hover:bg-white/10"
-                    >
-                        {task.clientMood}
-                    </Badge>
-                </div>
-
-                {/* Footer: Duration + Tools + CTA */}
-                <div className="flex items-center justify-between pt-1">
-                    <div className="flex items-center gap-3">
-                        <div className="flex items-center gap-1 text-xs text-white/40">
-                            <Clock className="h-3 w-3" />
-                            {task.duration}
-                        </div>
-                        <div className="flex gap-1">
-                            {task.tools.slice(0, 2).map((tool) => (
-                                <span
-                                    key={tool}
-                                    className="rounded bg-white/5 border border-white/5 px-1.5 py-0.5 text-[10px] text-white/50"
-                                >
-                                    {tool}
-                                </span>
-                            ))}
-                            {task.tools.length > 2 && (
-                                <span className="rounded bg-white/5 border border-white/5 px-1.5 py-0.5 text-[10px] text-white/50">
-                                    +{task.tools.length - 2}
-                                </span>
+        <motion.div whileHover={{ y: -4 }} transition={{ type: "spring", stiffness: 400, damping: 25 }}>
+            <Card className="group h-full overflow-hidden rounded-2xl border border-border bg-card/80 shadow-sm backdrop-blur-sm transition-all duration-300 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5 dark:bg-card/60">
+                <CardContent className="flex flex-col gap-4 p-5">
+                    {/* Header: Field + Difficulty */}
+                    <div className="flex items-center justify-between">
+                        <div
+                            className={cn(
+                                "flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium",
+                                fieldConfig.bg,
+                                fieldConfig.color,
+                                "border-current/20"
                             )}
+                        >
+                            <FieldIcon className="h-3 w-3" />
+                            {fieldConfig.label}
+                        </div>
+                        <div className="flex items-center gap-1">
+                            {Array.from({ length: 3 }).map((_, i) => (
+                                <div
+                                    key={i}
+                                    className={cn(
+                                        "h-1.5 w-1.5 rounded-full",
+                                        i < diffConfig.dots ? diffConfig.color.replace("text-", "bg-") : "bg-muted"
+                                    )}
+                                />
+                            ))}
+                            <span className={cn("ml-1 text-xs", diffConfig.color)}>
+                                {diffConfig.label}
+                            </span>
                         </div>
                     </div>
-                    <Button
-                        size="sm"
-                        className="h-8 gap-1 text-xs bg-white/5 text-white border border-white/10 hover:bg-purple-500 hover:border-purple-500/50 hover:text-white transition-all duration-300"
-                    >
-                        Start
-                        <ArrowRight className="h-3 w-3" />
-                    </Button>
-                </div>
-            </CardContent>
-        </Card>
+
+                    {/* Title */}
+                    <h3 className="text-lg font-semibold leading-tight text-foreground transition-colors group-hover:text-primary">
+                        {task.title}
+                    </h3>
+
+                    {/* Description */}
+                    <p className="text-sm leading-relaxed text-muted-foreground line-clamp-2">
+                        {task.description}
+                    </p>
+
+                    {/* Level + Client Persona */}
+                    <div className="flex items-center gap-2 rounded-xl border border-border bg-muted/30 px-3 py-2">
+                        <span className="rounded border border-amber-500/30 bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-medium text-amber-600 dark:text-amber-400">
+                            L{task.level}
+                        </span>
+                        <Zap className="h-3.5 w-3.5 text-amber-500 dark:text-amber-400" />
+                        <span className="text-xs text-muted-foreground">
+                            <span className="text-muted-foreground/80">Client: </span>
+                            <span className="font-medium text-foreground">{task.clientPersona}</span>
+                        </span>
+                        <Badge
+                            variant="secondary"
+                            className="ml-auto text-[10px] border-border bg-muted/50 text-muted-foreground"
+                        >
+                            {task.clientMood}
+                        </Badge>
+                    </div>
+
+                    {/* Footer: Duration + Tools + CTA */}
+                    <div className="flex items-center justify-between pt-1">
+                        <div className="flex items-center gap-3">
+                            <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                                <Clock className="h-3 w-3" />
+                                {task.duration}
+                            </div>
+                            <div className="flex gap-1">
+                                {task.tools.slice(0, 2).map((tool) => (
+                                    <span
+                                        key={tool}
+                                        className="rounded border border-border bg-muted/50 px-1.5 py-0.5 text-[10px] text-muted-foreground"
+                                    >
+                                        {tool}
+                                    </span>
+                                ))}
+                                {task.tools.length > 2 && (
+                                    <span className="rounded border border-border bg-muted/50 px-1.5 py-0.5 text-[10px] text-muted-foreground">
+                                        +{task.tools.length - 2}
+                                    </span>
+                                )}
+                            </div>
+                        </div>
+                        <Button
+                            size="sm"
+                            className="h-8 gap-1 rounded-xl text-xs transition-all duration-300"
+                            asChild
+                        >
+                            <Link href={`/dashboard/project/${task.id}`} className="gap-1">
+                                Start
+                                <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
+                            </Link>
+                        </Button>
+                    </div>
+                </CardContent>
+            </Card>
+        </motion.div>
     )
 }
