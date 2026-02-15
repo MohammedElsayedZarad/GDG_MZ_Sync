@@ -3,17 +3,6 @@
 import { useState, useCallback, useEffect } from "react"
 import { GripVertical } from "lucide-react"
 import type { SimulationTask } from "@/lib/tasks"
-
-function useReportProgress(projectId: string) {
-  useEffect(() => {
-    if (!projectId) return
-    fetch("/api/progress", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ project_id: projectId, status: "in_progress" }),
-    }).catch(() => {})
-  }, [projectId])
-}
 import { ProjectWorkspaceProvider } from "./ProjectWorkspaceContext"
 import { ProjectChat } from "./ProjectChat"
 import { ProjectIDE } from "./ProjectIDE"
@@ -27,6 +16,17 @@ const DEFAULT_CODE = `// Implement your solution here.
 const MIN_PANE_PERCENT = 25
 const MAX_PANE_PERCENT = 75
 const DEFAULT_CHAT_PERCENT = 50
+
+function useReportProgress(projectId: string) {
+  useEffect(() => {
+    if (!projectId) return
+    fetch("/api/progress", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ project_id: projectId, status: "in_progress" }),
+    }).catch(() => {})
+  }, [projectId])
+}
 
 interface ProjectViewProps {
   task: SimulationTask
@@ -72,28 +72,28 @@ export function ProjectView({ task }: ProjectViewProps) {
           <ProjectChat task={task} />
         </div>
 
-      {/* Resizable divider */}
-      <button
-        type="button"
-        aria-label="Resize panels"
-        onMouseDown={() => setIsDragging(true)}
-        className={cn(
-          "shrink-0 w-2 flex items-center justify-center bg-border hover:bg-primary/40 transition-colors cursor-col-resize select-none",
-          "focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 ring-inset",
-          isDragging && "bg-primary/50"
-        )}
-      >
-        <GripVertical className="h-4 w-4 text-muted-foreground" />
-      </button>
+        {/* Resizable divider */}
+        <button
+          type="button"
+          aria-label="Resize panels"
+          onMouseDown={() => setIsDragging(true)}
+          className={cn(
+            "shrink-0 w-2 flex items-center justify-center bg-border hover:bg-primary/40 transition-colors cursor-col-resize select-none",
+            "focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 ring-inset",
+            isDragging && "bg-primary/50"
+          )}
+        >
+          <GripVertical className="h-4 w-4 text-muted-foreground" />
+        </button>
 
-      {/* Right half: IDE Sandbox — implement code, reviewed by AI */}
-      <div
-        className="flex flex-1 flex-col min-w-0 min-h-0 bg-card/20"
-        style={{ width: `${100 - chatPercent}%` }}
-      >
-        <ProjectIDE task={task} />
+        {/* Right half: IDE Sandbox — implement code, reviewed by AI */}
+        <div
+          className="flex flex-1 flex-col min-w-0 min-h-0 bg-card/20"
+          style={{ width: `${100 - chatPercent}%` }}
+        >
+          <ProjectIDE task={task} />
+        </div>
       </div>
-    </div>
     </ProjectWorkspaceProvider>
   )
 }
