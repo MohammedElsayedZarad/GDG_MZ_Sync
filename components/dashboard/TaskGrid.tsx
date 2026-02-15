@@ -66,7 +66,7 @@ export function TaskGrid() {
                         hidden: {},
                     }}
                 >
-                    {filteredTasks.map((task, i) => (
+                    {filteredTasks.map((task) => (
                         <motion.div
                             key={task.id}
                             layout

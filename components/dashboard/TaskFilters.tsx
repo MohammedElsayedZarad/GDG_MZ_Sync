@@ -69,7 +69,7 @@ export function TaskFilters({
                 <div className="flex flex-wrap gap-2">
                     {Object.entries(FIELD_CONFIG).map(([key, config]) => {
                         const Icon = config.icon
-                        const isSelected = selectedTracks.length === 0 || selectedTracks.includes(key as TaskField)
+
                         const isExplicitlySelected = selectedTracks.includes(key as TaskField)
                         const showActive = selectedTracks.length === 0 ? true : isExplicitlySelected
                         let activeClass = "border-border bg-muted/50 text-muted-foreground hover:border-primary/30 hover:text-foreground"

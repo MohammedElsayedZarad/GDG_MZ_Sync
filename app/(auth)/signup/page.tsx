@@ -184,10 +184,28 @@ export default function SignupPage() {
                                             type="password"
                                             value={password}
                                             onChange={(e) => setPassword(e.target.value)}
-                                            placeholder="Min. 6 characters"
+                                            placeholder="Secure password"
                                             disabled={isPending}
                                             className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-white/20 focus:border-purple-500/50 focus:ring-purple-500/20"
                                         />
+                                    </div>
+
+                                    {/* Real-time Password Validation */}
+                                    <div className="mt-2 grid grid-cols-2 gap-2 p-3 rounded-lg bg-white/5 border border-white/5">
+                                        {[
+                                            { label: "Min. 6 chars", met: password.length >= 6 },
+                                            { label: "Lowercase (a-z)", met: /[a-z]/.test(password) },
+                                            { label: "Uppercase (A-Z)", met: /[A-Z]/.test(password) },
+                                            { label: "Number (0-9)", met: /[0-9]/.test(password) },
+                                            { label: "Special char (!@#...)", met: /[!@#$%^&*()_+\-=\[\]{};':"|<>?,./`~]/.test(password) },
+                                        ].map((req, i) => (
+                                            <div key={i} className="flex items-center gap-2">
+                                                <div className={`h-1.5 w-1.5 rounded-full transition-colors duration-300 ${req.met ? "bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]" : "bg-white/20"}`} />
+                                                <span className={`text-[10px] transition-colors duration-300 ${req.met ? "text-white/80" : "text-white/30"}`}>
+                                                    {req.label}
+                                                </span>
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
                                 <div className="space-y-2">
