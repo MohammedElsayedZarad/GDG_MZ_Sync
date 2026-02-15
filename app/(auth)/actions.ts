@@ -95,23 +95,10 @@ export async function signup(data: {
 
     const supabase = await createClient()
 
-    // First, check if user already exists
-    const { data: existingUser } = await supabase
-        .from("profiles")
-        .select("id")
-        .eq("id", (await supabase.auth.getUser()).data.user?.id || "")
-        .single()
-
-    if (existingUser) {
-        return { error: "User already exists" }
-    }
-
-    // Use signInWithOtp to send verification email
-    // This will send an email with a 6-digit OTP code
-    const { error } = await supabase.auth.signInWithOtp({
+    const { error } = await supabase.auth.signUp({
         email: validated.data.email,
+        password: validated.data.password,
         options: {
-            shouldCreateUser: true,
             data: {
                 full_name: validated.data.fullName,
                 region: validated.data.region,
@@ -125,71 +112,8 @@ export async function signup(data: {
 
     return {
         success:
-            "Verification code sent! Please check your email for a 6-digit code.",
+            "Account created! Please check your email and click the confirmation link to verify your account.",
     }
-}
-
-export async function verifyEmailOtp(data: {
-    email: string
-    token: string
-    fullName: string
-    region: string
-}): Promise<AuthResult> {
-    const supabase = await createClient()
-
-    // Verify the OTP
-    const {
-        data: { session },
-        error,
-    } = await supabase.auth.verifyOtp({
-        email: data.email,
-        token: data.token,
-        type: "email",
-    })
-
-    if (error) {
-        return { error: error.message }
-    }
-
-    if (!session?.user) {
-        return { error: "Verification failed. Please try again." }
-    }
-
-    // Create profile after successful verification
-    const { error: profileError } = await supabase.from("profiles").insert({
-        id: session.user.id,
-        full_name: data.fullName,
-        region: data.region,
-        field: "frontend", // placeholder, updated in onboarding
-        experience_level: "student", // placeholder
-        interests: [],
-        onboarding_completed: false,
-    })
-
-    if (profileError) {
-        // If profile creation fails, we should still let them continue
-        // They can complete profile later
-        console.error("Profile creation error:", profileError)
-    }
-
-    return { success: "Email verified! Completing your profile..." }
-}
-
-export async function resendEmailOtp(email: string): Promise<AuthResult> {
-    const supabase = await createClient()
-
-    const { error } = await supabase.auth.signInWithOtp({
-        email,
-        options: {
-            shouldCreateUser: false,
-        },
-    })
-
-    if (error) {
-        return { error: error.message }
-    }
-
-    return { success: "Verification code resent! Check your email." }
 }
 
 

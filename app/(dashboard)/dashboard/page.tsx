@@ -24,9 +24,9 @@ export default async function DashboardPage() {
         .eq("id", user.id)
         .single()
 
-    // If no profile or onboarding not completed, redirect to signup
+    // If no profile or onboarding not completed, redirect to onboarding
     if (!profile || !profile.onboarding_completed) {
-        redirect("/signup")
+        redirect("/onboarding")
     }
 
     const fieldConfig =
