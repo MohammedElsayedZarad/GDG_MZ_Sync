@@ -1,11 +1,12 @@
 "use client"
 
-import UnicornScene from "unicornstudio-react/next"
-import { useEffect, useState } from "react"
 import { GradientButton } from "@/components/ui/gradient-button"
 import { ArrowRight } from "lucide-react"
 import { motion } from "framer-motion"
 import { Features } from "@/components/landing/Features"
+import { HeroMonitor } from "@/components/landing/HeroMonitor"
+import UnicornScene from "unicornstudio-react/next"
+import { useEffect, useState } from "react"
 
 export default function LandingPage() {
   const [mounted, setMounted] = useState(false)
@@ -30,20 +31,18 @@ export default function LandingPage() {
           </div>
           <div className="flex items-center gap-4">
             <GradientButton variant="variant" className="h-9 px-4 text-xs font-semibold">Log in</GradientButton>
-            <GradientButton className="h-9 px-4 text-xs font-semibold hover:shadow-[0_0_20px_-5px_rgba(168,85,247,0.5)]">Get Access</GradientButton>
           </div>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="relative flex min-h-screen items-center justify-center pt-20 overflow-hidden">
-        {/* Unicorn Studio Background */}
-        <div className="fixed inset-0 -z-10">
+      <section className="relative flex min-h-screen items-center justify-center pt-24 pb-12 overflow-hidden">
+        <div className="absolute inset-0 z-0">
           {mounted && (
             <UnicornScene
               projectId="O9x26UxHgTGLBz8EmFM3"
               width="100%"
-              height="100vh"
+              height="100%"
               sdkUrl="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.0.5/dist/unicornStudio.umd.js"
             />
           )}
@@ -51,43 +50,49 @@ export default function LandingPage() {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,black_100%)] opacity-50" />
         </div>
 
-        <div className="container relative z-10 mx-auto px-6 text-center">
-          <div className="mx-auto max-w-5xl space-y-8">
+        <div className="container relative z-10 mx-auto px-6">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
 
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.1 }}
-              className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight text-white drop-shadow-2xl"
-            >
-              Experience the Future of <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-purple-200 to-purple-400">
-                Data Architecture
-              </span>
-            </motion.h1>
+            {/* Left Column: Text Content */}
+            <div className="flex flex-col gap-8 text-center lg:text-left">
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.1 }}
+                className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white drop-shadow-2xl leading-[1.1]"
+              >
+                Transforming Calculators into <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-purple-200 to-purple-400">
+                  Battle-Ready Problem Solvers
+                </span>
+              </motion.h1>
 
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="mx-auto max-w-2xl text-lg md:text-xl text-white/60 leading-relaxed"
-            >
-              Premium design meets cutting-edge technology. Build clearly defined, high-performance interfaces with our liquid-glass engine.
-            </motion.p>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="mx-auto lg:mx-0 max-w-xl text-lg md:text-xl text-white/60 leading-relaxed"
+              >
+                Bridge the academic-professional divide with a high-fidelity behavioral simulator. Escape the &quot;Notebook Trap&quot;, dismantle the &quot;Jargon Barrier&quot;, and navigate real-world friction with AI-driven stakeholders.
+              </motion.p>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8"
-            >
-              <GradientButton className="w-full sm:w-auto text-base px-8 py-6 group">
-                Get Started <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
-              </GradientButton>
-              <GradientButton variant="variant" className="w-full sm:w-auto text-base px-8 py-6">
-                Learn More
-              </GradientButton>
-            </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+                className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4"
+              >
+                <GradientButton className="w-full sm:w-auto text-base px-8 py-6 group">
+                  Get Started <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
+                </GradientButton>
+              </motion.div>
+            </div>
+
+            {/* Right Column: 3D Monitor / Creative Component */}
+            <div className="relative w-full flex justify-center lg:justify-end">
+              <HeroMonitor />
+            </div>
+
           </div>
         </div>
       </section>
@@ -98,9 +103,9 @@ export default function LandingPage() {
 
         <div className="container mx-auto px-6 relative">
           <div className="mb-20 text-center max-w-3xl mx-auto">
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 tracking-tight">Built for Excellence</h2>
+            <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 tracking-tight">Beyond Static Tutorials</h2>
             <p className="text-white/50 text-lg leading-relaxed">
-              Every pixel crafted for performance and aesthetic perfection. Our platform delivers an unmatched development experience.
+              We replace the &quot;Correct Answer&quot; with satisfied stakeholders and deployed systems.
             </p>
           </div>
 

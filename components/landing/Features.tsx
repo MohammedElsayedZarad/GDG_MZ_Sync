@@ -1,6 +1,6 @@
 "use client";
 
-import { Zap, Shield, Layers, BarChart, Headphones, Frame } from "lucide-react";
+import { Users, Terminal, MessageSquare, Mic, Briefcase, GitBranch } from "lucide-react";
 import { GlowingEffect } from "@/components/ui/glowing-effect";
 import { cn } from "@/lib/utils";
 
@@ -9,39 +9,39 @@ export function Features() {
         <ul className="grid grid-cols-1 grid-rows-none gap-4 md:grid-cols-12 md:grid-rows-3 lg:gap-4 xl:max-h-[34rem] xl:grid-rows-2">
             <GridItem
                 area="md:[grid-area:1/1/2/7] xl:[grid-area:1/1/2/5]"
-                icon={<Zap className="h-4 w-4" />}
-                title="Lightning Fast"
-                description="Optimized for speed with zero-runtime overhead and maximum efficiency."
+                icon={<Users className="h-4 w-4" />}
+                title="Adaptive AI Personas"
+                description="Master stakeholder management by interacting with diverse, AI-driven professional temperaments."
             />
             <GridItem
                 area="md:[grid-area:1/7/2/13] xl:[grid-area:1/5/2/9]"
-                icon={<Shield className="h-4 w-4" />}
-                title="Bank-Grade Security"
-                description="Enterprise-level encryption and security protocols built into the core."
+                icon={<Terminal className="h-4 w-4" />}
+                title="Production Sandbox"
+                description="Escape the 'Notebook Trap'. Deploy to live environments and handle real-world chaos events."
             />
             <GridItem
                 area="md:[grid-area:2/1/3/7] xl:[grid-area:1/9/2/13]"
-                icon={<Layers className="h-4 w-4" />}
-                title="Seamless Integration"
-                description="Drop-in compatibility with your existing tech stack and tools."
+                icon={<MessageSquare className="h-4 w-4" />}
+                title="Jargon Barrier Dismantled"
+                description="Real-time analysis of your communication clarity and 'jargon-to-value' ratio."
             />
             <GridItem
                 area="md:[grid-area:2/7/3/13] xl:[grid-area:2/1/3/5]"
-                icon={<BarChart className="h-4 w-4" />}
-                title="Advanced Analytics"
-                description="Real-time insights and monitoring for data-driven decisions."
+                icon={<Mic className="h-4 w-4" />}
+                title="Voice Intelligence"
+                description="Practice explaining complex concepts to non-technical stakeholders via voice notes."
             />
             <GridItem
                 area="md:[grid-area:3/1/4/7] xl:[grid-area:2/5/3/9]"
-                icon={<Headphones className="h-4 w-4" />}
-                title="24/7 Support"
-                description="Dedicated support team available whenever you need assistance."
+                icon={<Briefcase className="h-4 w-4" />}
+                title="Market-Grounded Data"
+                description="Projects modeled after scraped freelance contracts, not academic toys."
             />
             <GridItem
                 area="md:[grid-area:3/7/4/13] xl:[grid-area:2/9/3/13]"
-                icon={<Frame className="h-4 w-4" />}
-                title="Pixel Perfect"
-                description="Design systems that scale with your product vision."
+                icon={<GitBranch className="h-4 w-4" />}
+                title="Git-Integrated Workflow"
+                description="Success is measured by PR approvals and version control history, not just code output."
             />
         </ul>
     );

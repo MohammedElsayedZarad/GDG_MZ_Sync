@@ -4,8 +4,10 @@
 
 @layer base {
   :root {
-    --background: 0 0% 0%; /* Pure Black */
-    --foreground: 0 0% 100%; /* Pure White */
+    --background: 0 0% 0%;
+    /* Pure Black */
+    --foreground: 0 0% 100%;
+    /* Pure White */
     --card: 0 0% 3%;
     --card-foreground: 0 0% 100%;
     --popover: 0 0% 3%;
@@ -41,8 +43,17 @@
   .glass-card {
     @apply bg-white/5 backdrop-blur-lg border border-white/10 shadow-xl;
   }
-  
+
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-white via-neutral-200 to-neutral-400;
   }
+}
+
+/* Hide Unicorn Studio Badge */
+.us-badge,
+a[href*="unicorn.studio"] {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
 }
