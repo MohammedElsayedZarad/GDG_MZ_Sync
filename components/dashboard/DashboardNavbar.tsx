@@ -24,8 +24,8 @@ export function DashboardNavbar({ userEmail, userName }: DashboardNavbarProps) {
                 {/* Logo */}
                 <Link href="/dashboard" className="flex items-center gap-2 group">
                     <Terminal className="h-5 w-5 text-purple-500 transition-transform group-hover:scale-110" />
-                    <span className="text-lg font-bold tracking-tight text-white">
-                        Interna<span className="text-purple-500">.</span>
+                    <span className="text-lg font-bold tracking-tight text-white font-logo">
+                        Interna<span className="text-purple-500">.</span> Virtual
                     </span>
                 </Link>
 

@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { Inter, JetBrains_Mono } from "next/font/google"
+import { Inter, JetBrains_Mono, MuseoModerno } from "next/font/google"
 import { Toaster } from "sonner"
 import "./globals.css"
 
@@ -11,6 +11,11 @@ const inter = Inter({
 const jetbrains = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
+})
+
+const museoModerno = MuseoModerno({
+  subsets: ["latin"],
+  variable: "--font-logo",
 })
 
 export const metadata: Metadata = {
@@ -34,7 +39,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${inter.variable} ${jetbrains.variable} font-sans antialiased`}
+        className={`${inter.variable} ${jetbrains.variable} ${museoModerno.variable} font-sans antialiased`}
       >
         {children}
         <Toaster theme="dark" position="top-center" richColors />

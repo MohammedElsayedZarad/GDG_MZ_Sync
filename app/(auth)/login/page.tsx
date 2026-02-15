@@ -40,12 +40,12 @@ export default function LoginPage() {
                     className="mb-8 flex items-center justify-center gap-2 group"
                 >
                     <Terminal className="h-6 w-6 text-purple-500 transition-transform group-hover:scale-110" />
-                    <span className="text-xl font-bold tracking-tight">
-                        Interna<span className="text-purple-500">.</span>
+                    <span className="text-xl font-bold tracking-tight font-logo">
+                        Interna<span className="text-purple-500">.</span> Virtual
                     </span>
                 </Link>
 
-                <div className="glass-card rounded-2xl p-8 backdrop-blur-xl border border-white/5 bg-black/40 shadow-2xl">
+                <div className="glass-card rounded-2xl p-8 shadow-2xl">
                     <div className="text-center mb-8">
                         <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-purple-200 to-purple-400">
                             Welcome back
@@ -90,7 +90,7 @@ export default function LoginPage() {
 
                         <Button
                             type="submit"
-                            className="w-full h-12 bg-gradient-to-r from-[#4e1e40] to-black border border-white/10 hover:shadow-[0_0_20px_-5px_rgba(78,30,64,0.5)] transition-all duration-300 rounded-lg font-medium text-white"
+                            className="w-full h-12 group glass-card transition-all duration-300 hover:border-purple-500/30 hover:bg-white/10 hover:shadow-[0_0_20px_-5px_rgba(168,85,247,0.15)] rounded-lg font-medium text-white"
                             disabled={isPending}
                         >
                             {isPending ? (

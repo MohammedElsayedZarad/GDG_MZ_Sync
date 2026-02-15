@@ -243,8 +243,8 @@ export default function SignupPage() {
                     className="mb-6 flex items-center justify-center gap-2 group"
                 >
                     <Terminal className="h-6 w-6 text-purple-500 transition-transform group-hover:scale-110" />
-                    <span className="text-xl font-bold tracking-tight">
-                        Interna<span className="text-purple-500">.</span>
+                    <span className="text-xl font-bold tracking-tight font-logo">
+                        Interna<span className="text-purple-500">.</span> Virtual
                     </span>
                 </Link>
 
@@ -264,7 +264,7 @@ export default function SignupPage() {
                     Step {step === 1.5 ? 2 : step > 1.5 ? step + 1 : step} of 5
                 </p>
 
-                <div className="glass-card rounded-2xl p-8 backdrop-blur-xl border border-white/5 bg-black/40 shadow-2xl">
+                <div className="glass-card rounded-2xl p-8 shadow-2xl">
                     {/* Step 1: Account */}
                     {step === 1 && (
                         <>

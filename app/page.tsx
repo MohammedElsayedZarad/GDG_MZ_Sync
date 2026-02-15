@@ -22,8 +22,8 @@ export default function LandingPage() {
       {/* Navbar */}
       <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/5 bg-black/40 backdrop-blur-xl transition-all duration-300">
         <div className="container mx-auto flex h-16 items-center justify-between px-6">
-          <div className="text-xl font-bold tracking-tighter text-white">
-            Interna<span className="text-purple-500">.</span>
+          <div className="text-xl font-bold tracking-tighter text-white font-logo">
+            Interna<span className="text-purple-500">.</span> Virtual
           </div>
           <div className="hidden md:flex items-center gap-4 text-sm font-medium text-white/70">
             <a href="#features" className="px-4 py-2 rounded-full border border-white/5 bg-white/5 hover:bg-white/10 hover:border-white/10 hover:text-white transition-all backdrop-blur-md">Features</a>
