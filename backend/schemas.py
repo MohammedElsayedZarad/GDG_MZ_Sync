@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from typing import List, Optional, Literal
 
 class Milestone(BaseModel):
@@ -82,3 +82,15 @@ class CodeReviewRequest(BaseModel):
     code: str
     language: str
     language_hint: Optional[Literal["en", "ar"]] = None
+
+class RepoRequest(BaseModel):
+    github_url: str
+    access_token: Optional[str] = None
+    branch: Optional[str] = "main"
+
+    @field_validator('github_url')
+    @classmethod
+    def validate_url(cls, v: str):
+        if "github.com" not in v:
+            raise ValueError("Must be a valid GitHub URL")
+        return v.strip().rstrip('/')
