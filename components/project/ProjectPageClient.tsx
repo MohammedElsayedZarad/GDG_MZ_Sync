@@ -12,7 +12,11 @@ import { ProjectReport } from "./ProjectReport"
 import { ProjectWorkspaceProvider } from "./ProjectWorkspaceContext"
 import { ProjectIDE } from "./ProjectIDE"
 import { ProjectPresence } from "./ProjectPresence"
+
 import { ProjectMilestones } from "./ProjectMilestones"
+import { ProjectResources } from "./ProjectResources"
+import { ProjectKanban } from "./ProjectKanban"
+import { ProjectQuiz } from "./ProjectQuiz"
 
 interface ProjectPageClientProps {
     task: SimulationTask
@@ -289,6 +293,21 @@ export function ProjectPageClient({ task }: ProjectPageClientProps) {
                     id: "roadmap",
                     label: "Roadmap",
                     type: "description" as const, // Reusing icon for now or I can add a new type
+                },
+                {
+                    id: "kanban",
+                    label: "Kanban Board",
+                    type: "description" as const,
+                },
+                {
+                    id: "resources",
+                    label: "Resources",
+                    type: "description" as const,
+                },
+                {
+                    id: "quiz",
+                    label: "Skill Quiz",
+                    type: "description" as const,
                 }
             ]
         },
@@ -397,6 +416,7 @@ export function ProjectPageClient({ task }: ProjectPageClientProps) {
                                     milestones={simulation.milestones}
                                 />
                             </motion.div>
+
                         ) : activeId === "roadmap" && simulation ? (
                             <motion.div
                                 key="roadmap"
@@ -410,6 +430,40 @@ export function ProjectPageClient({ task }: ProjectPageClientProps) {
                                     completedIndices={completedMilestones}
                                     onToggle={handleMilestoneToggle}
                                 />
+                            </motion.div>
+                        ) : activeId === "kanban" && simulation ? (
+                            <motion.div
+                                key="kanban"
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -20 }}
+                                className="h-full"
+                            >
+                                <ProjectKanban
+                                    milestones={simulation.milestones}
+                                    completedIndices={completedMilestones}
+                                    onToggle={handleMilestoneToggle}
+                                />
+                            </motion.div>
+                        ) : activeId === "resources" && simulation ? (
+                            <motion.div
+                                key="resources"
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -20 }}
+                                className="h-full"
+                            >
+                                <ProjectResources resources={simulation.resources} />
+                            </motion.div>
+                        ) : activeId === "quiz" && simulation ? (
+                            <motion.div
+                                key="quiz"
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -20 }}
+                                className="h-full"
+                            >
+                                <ProjectQuiz quiz={simulation.quiz} />
                             </motion.div>
                         ) : (
                             <motion.div
@@ -495,6 +549,6 @@ export function ProjectPageClient({ task }: ProjectPageClientProps) {
                     <ProjectIDE task={task} />
                 </div>
             </div>
-        </ProjectWorkspaceProvider>
+        </ProjectWorkspaceProvider >
     )
 }
