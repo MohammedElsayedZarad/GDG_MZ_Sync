@@ -5,7 +5,7 @@ WORKDIR /app
 
 # Install dependencies (npm install for Coolify: tolerates lock file drift / cross-OS)
 COPY package.json package-lock.json* ./
-RUN npm install
+RUN npm install --legacy-peer-deps
 
 # Stage 2: Builder
 FROM node:20-alpine AS builder
