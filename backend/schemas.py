@@ -13,6 +13,18 @@ class Persona(BaseModel):
     system_prompt: str
     initial_message: str
 
+class Resource(BaseModel):
+    title: str
+    url: str
+    type: Literal["documentation", "tutorial", "library", "video"]
+    description: str
+
+class QuizQuestion(BaseModel):
+    question: str
+    options: List[str]
+    correct_option_index: int
+    explanation: str
+
 class ProjectStructure(BaseModel):
     title: str
     domain: str
@@ -24,6 +36,8 @@ class ProjectStructure(BaseModel):
     functional_requirements: List[str]
     non_functional_requirements: List[str]
     milestones: List[Milestone]
+    resources: List[Resource] = []
+    quiz: List[QuizQuestion] = []
 
 class PersonaList(BaseModel):
     personas: List[Persona]
@@ -42,6 +56,8 @@ class SimulationOutput(BaseModel):
     milestones: List[Milestone]
     personas: List[Persona]
     team: List[Persona] = []
+    resources: List[Resource] = []
+    quiz: List[QuizQuestion] = []
 
 class GenerateSimulationRequest(BaseModel):
     title: str

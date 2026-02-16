@@ -107,6 +107,20 @@ export interface SimulationPersona {
   initial_message: string
 }
 
+export interface Resource {
+  title: string
+  url: string
+  type: "documentation" | "tutorial" | "library" | "video"
+  description: string
+}
+
+export interface QuizQuestion {
+  question: string
+  options: string[]
+  correct_option_index: number
+  explanation: string
+}
+
 export interface SimulationData {
   title: string
   domain: string
@@ -120,6 +134,8 @@ export interface SimulationData {
   milestones: SimulationMilestone[]
   personas: SimulationPersona[]
   team: SimulationPersona[]
+  resources: Resource[]
+  quiz: QuizQuestion[]
 }
 
 export interface GenerateSimulationRequest {
