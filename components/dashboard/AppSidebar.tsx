@@ -34,7 +34,7 @@ const navItems = [
 ]
 
 const bottomItems = [
-  { href: "/dashboard", label: "Profile", icon: User },
+  { href: "/profile", label: "Profile", icon: User },
   { href: "#", label: "Log out", icon: LogOut, action: "logout" },
 ]
 
