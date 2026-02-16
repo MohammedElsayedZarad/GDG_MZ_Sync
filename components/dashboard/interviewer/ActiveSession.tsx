@@ -55,17 +55,44 @@ export function ActiveSession({
     useEffect(() => {
         if (typeof window !== "undefined") {
             // @ts-ignore
+            // @ts-ignore
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
             if (SpeechRecognition) {
                 const recognition = new SpeechRecognition()
-                recognition.continuous = false
+                recognition.continuous = true
                 recognition.interimResults = true
                 recognition.lang = language === "ar" ? "ar-EG" : "en-US"
 
-                recognition.onstart = () => setIsListening(true)
-                recognition.onend = () => setIsListening(false)
+                recognition.onstart = () => {
+                    console.log("Speech recognition started")
+                    setIsListening(true)
+                    // Interruption: Stop AI speech when user starts speaking
+                    if (window.speechSynthesis) {
+                        window.speechSynthesis.cancel()
+                        setIsAISpeaking(false)
+                    }
+                }
+
+                recognition.onend = () => {
+                    console.log("Speech recognition ended")
+                    setIsListening(false)
+                    // Auto-restart if we didn't explicitly stop it (and assuming we want continuous)
+                    // logic to be added if needed, but for now let's rely on button or re-click
+                }
+
+                recognition.onerror = (event: any) => {
+                    console.error("Speech recognition error", event.error)
+                    setIsListening(false)
+                    toast.error(`Mic Error: ${event.error}`)
+                }
 
                 recognition.onresult = (event: any) => {
+                    // Interruption: Double check cancellation
+                    if (window.speechSynthesis && window.speechSynthesis.speaking) {
+                        window.speechSynthesis.cancel()
+                        setIsAISpeaking(false)
+                    }
+
                     let interim = ""
                     let final = ""
                     for (let i = event.resultIndex; i < event.results.length; ++i) {
@@ -117,10 +144,13 @@ export function ActiveSession({
         const utterance = new SpeechSynthesisUtterance(text)
         utterance.lang = language === "ar" ? "ar-EG" : "en-US"
 
-        // Try to find a good voice
+        // Improved Voice Selection
         const voices = synthRef.current.getVoices()
+        // Priority: Google -> Microsoft -> any matching lang
         const preferredVoice = voices.find(v => v.lang.includes(language === "ar" ? "ar" : "en") && v.name.includes("Google"))
+            || voices.find(v => v.lang.includes(language === "ar" ? "ar" : "en") && v.name.includes("Microsoft"))
             || voices.find(v => v.lang.includes(language === "ar" ? "ar" : "en"))
+
         if (preferredVoice) utterance.voice = preferredVoice
 
         utterance.pitch = 1
@@ -138,6 +168,11 @@ export function ActiveSession({
 
         setIsAIProcessing(true)
         setTranscript("") // Clear input
+
+        // Stop listening while processing to avoid echoes/loops
+        if (isListening) {
+            recognitionRef.current?.stop()
+        }
 
         // Add user message to history (unless initial trigger)
         const newHistory = isInitial ? [] : [...messages, { role: "user" as const, content: textToSend }]
@@ -295,17 +330,22 @@ export function ActiveSession({
                         />
                     </div>
 
-                    <Button
-                        size="icon"
-                        variant={isListening ? "default" : "secondary"}
-                        className={cn(
-                            "h-16 w-16 rounded-full shadow-xl transition-all duration-300",
-                            isListening ? "bg-red-500 hover:bg-red-600 animate-pulse" : "bg-white hover:bg-gray-100"
+                    <div className="relative">
+                        {isListening && (
+                            <span className="absolute inset-0 animate-ping rounded-full bg-red-400 opacity-75"></span>
                         )}
-                        onClick={toggleListening}
-                    >
-                        {isListening ? <MicOff className="h-6 w-6" /> : <Mic className="h-6 w-6 text-black" />}
-                    </Button>
+                        <Button
+                            size="icon"
+                            variant={isListening ? "default" : "secondary"}
+                            className={cn(
+                                "relative h-16 w-16 rounded-full shadow-xl transition-all duration-300 z-10",
+                                isListening ? "bg-red-500 hover:bg-red-600" : "bg-white hover:bg-gray-100"
+                            )}
+                            onClick={toggleListening}
+                        >
+                            {isListening ? <MicOff className="h-6 w-6" /> : <Mic className="h-6 w-6 text-black" />}
+                        </Button>
+                    </div>
 
                     <Button
                         size="icon"
