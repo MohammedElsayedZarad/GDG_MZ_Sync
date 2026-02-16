@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useTransition } from "react"
+import { useState, useTransition, useEffect } from "react"
 import Link from "next/link"
 import {
     Terminal,
@@ -18,6 +18,7 @@ import {
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
+import { createClient } from "@/lib/supabase/client"
 
 import { completeOnboarding } from "../actions"
 
@@ -52,12 +53,35 @@ export default function OnboardingPage() {
     const [experienceLevel, setExperienceLevel] = useState("")
     const [interests, setInterests] = useState<string[]>([])
 
+    useEffect(() => {
+        const checkProfile = async () => {
+            const supabase = createClient()
+            const { data: { user } } = await supabase.auth.getUser()
+
+            if (user) {
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('field')
+                    .eq('id', user.id)
+                    .single()
+
+                if (profile?.field) {
+                    setField(profile.field)
+                    setStep(2)
+                }
+            }
+        }
+
+        checkProfile()
+    }, [])
+
     function toggleInterest(interest: string) {
-        setInterests((prev) =>
-            prev.includes(interest)
-                ? prev.filter((i) => i !== interest)
-                : [...prev, interest]
-        )
+        setInterests((prev) => {
+            const arr = Array.isArray(prev) ? prev : []
+            return arr.includes(interest)
+                ? arr.filter((i) => i !== interest)
+                : [...arr, interest]
+        })
     }
 
     function handleComplete() {
@@ -221,7 +245,7 @@ export default function OnboardingPage() {
                                     <button
                                         key={interest}
                                         onClick={() => toggleInterest(interest)}
-                                        className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-all duration-200 ${interests.includes(interest)
+                                        className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-all duration-200 ${(interests ?? []).includes(interest)
                                             ? "border-purple-500/50 bg-purple-500/20 text-purple-300 shadow-[0_0_10px_-3px_rgba(168,85,247,0.3)]"
                                             : "border-white/10 bg-white/5 text-white/50 hover:border-white/20 hover:text-white/70"
                                             }`}

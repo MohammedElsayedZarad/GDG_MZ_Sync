@@ -212,9 +212,9 @@ export function ProjectPageClient({ task }: ProjectPageClientProps) {
     // ── Loading Screen ──
     if (isLoading) {
         return (
-            <div className="flex flex-1 items-center justify-center bg-black">
+            <div className="flex flex-1 items-center justify-center bg-background">
                 <div className="absolute inset-0">
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(147,51,234,0.15),transparent_70%)]" />
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(147,51,234,0.1),transparent_70%)] dark:bg-[radial-gradient(circle_at_50%_50%,rgba(147,51,234,0.15),transparent_70%)]" />
                 </div>
 
                 <div className="relative text-center space-y-8">
@@ -228,10 +228,10 @@ export function ProjectPageClient({ task }: ProjectPageClientProps) {
                     </div>
 
                     <div className="space-y-2">
-                        <h2 className="text-xl font-bold text-white">
+                        <h2 className="text-xl font-bold text-foreground">
                             Generating Your Simulation
                         </h2>
-                        <p className="text-sm text-white/50 max-w-sm mx-auto">
+                        <p className="text-sm text-muted-foreground max-w-sm mx-auto">
                             Our AI is crafting &quot;{task.title}&quot; with custom personas, milestones, and requirements...
                         </p>
                     </div>
@@ -246,9 +246,9 @@ export function ProjectPageClient({ task }: ProjectPageClientProps) {
                         ))}
                     </div>
 
-                    <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2">
+                    <div className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/30 px-4 py-2">
                         <Zap className={`h-4 w-4 ${getLevelColor(task.level)}`} />
-                        <span className="text-xs text-white/60">
+                        <span className="text-xs text-muted-foreground">
                             Level L{task.level} • {task.field}
                         </span>
                     </div>
@@ -260,13 +260,13 @@ export function ProjectPageClient({ task }: ProjectPageClientProps) {
     // ── Error State ──
     if (error) {
         return (
-            <div className="flex flex-1 items-center justify-center bg-black">
+            <div className="flex flex-1 items-center justify-center bg-background">
                 <div className="text-center space-y-4 max-w-md">
                     <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-red-500/20 bg-red-500/10">
                         <span className="text-2xl">⚠️</span>
                     </div>
-                    <h2 className="text-lg font-bold text-white">Generation Failed</h2>
-                    <p className="text-sm text-white/50">{error}</p>
+                    <h2 className="text-lg font-bold text-foreground">Generation Failed</h2>
+                    <p className="text-sm text-muted-foreground">{error}</p>
                     <button
                         onClick={generate}
                         className="rounded-lg bg-purple-500 px-4 py-2 text-sm font-medium text-white hover:bg-purple-600 transition-colors"
