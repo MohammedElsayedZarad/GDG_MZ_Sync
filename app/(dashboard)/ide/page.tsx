@@ -22,7 +22,7 @@ const MonacoEditor = dynamic(() => import("@monaco-editor/react"), {
     ),
 })
 
-const API_BASE = "http://localhost:8000"
+const API_BASE = "http://localhost:8001"
 
 interface FileNode {
     name: string
@@ -175,31 +175,41 @@ export default function IDEPage() {
             const eventSource = new EventSource(`${API_BASE}${stream_url}`)
             eventSourceRef.current = eventSource
 
-            const events: StepEvent["type"][] = ["step", "file", "execute", "lint", "error", "done", "report"]
+            const eventTypes: StepEvent["type"][] = ["step", "file", "execute", "lint", "error", "done", "report"]
 
-            events.forEach(eventType => {
+            eventTypes.forEach(eventType => {
                 eventSource.addEventListener(eventType, (e) => {
-                    const payload = JSON.parse(e.data)
+                    try {
+                        const payload = JSON.parse(e.data)
 
-                    if (eventType === "report") {
-                        setReviewSteps(prev => [...prev, { type: "report", message: "📋 Report generated" }])
-                        setReport(payload.data)
-                        setShowReport(true)
-                    } else if (eventType === "done") {
-                        setReviewSteps(prev => [...prev, { type: "done", message: payload.message || "✅ Review complete" }])
-                        setIsReviewing(false)
-                        eventSource.close()
-                    } else if (eventType === "error") {
-                        setReviewSteps(prev => [...prev, { type: "error", message: payload.message || "An error occurred" }])
-                        setIsReviewing(false)
-                        eventSource.close()
-                    } else {
-                        setReviewSteps(prev => [...prev, { type: eventType, message: payload.message }])
+                        console.log(`[SSE] ${eventType}:`, payload) // Debug logging
+
+                        if (eventType === "report") {
+                            setReviewSteps(prev => [...prev, { type: "report", message: "📋 Report generated" }])
+                            setReport(payload.data || "")
+                            setShowReport(true)
+                        } else if (eventType === "done") {
+                            setReviewSteps(prev => [...prev, {
+                                type: "done",
+                                message: "✅ Review complete"
+                            }])
+                            setIsReviewing(false)
+                            eventSource.close()
+                        } else if (eventType === "error") {
+                            setReviewSteps(prev => [...prev, { type: "error", message: payload.message || "An error occurred" }])
+                            setIsReviewing(false)
+                            eventSource.close()
+                        } else {
+                            setReviewSteps(prev => [...prev, { type: eventType, message: payload.message || "" }])
+                        }
+                    } catch (err) {
+                        console.error(`Failed to parse SSE event (${eventType}):`, err, e.data)
                     }
                 })
             })
 
-            eventSource.onerror = () => {
+            eventSource.onerror = (err) => {
+                console.error("SSE Error:", err)
                 setReviewSteps(prev => [...prev, { type: "error", message: "Connection lost" }])
                 setIsReviewing(false)
                 eventSource.close()
@@ -353,75 +363,30 @@ export default function IDEPage() {
                                 <X className="h-4 w-4 text-gray-400" />
                             </button>
                         </div>
-
                         <div className="p-3 border-b border-white/10 flex-shrink-0">
                             <Input
                                 value={repoUrl}
                                 onChange={(e) => setRepoUrl(e.target.value)}
                                 placeholder="GitHub repo URL..."
-                                disabled={isReviewing}
                                 className="mb-2 bg-black/50 border-white/20 text-sm h-9"
                             />
                             <Button
-                                onClick={startReview}
-                                disabled={isReviewing || !repoUrl}
+                                onClick={() => {
+                                    if (!repoUrl.startsWith("http")) {
+                                        alert("Please enter a valid GitHub URL")
+                                        return
+                                    }
+                                    // Open Sandbox page (served from public/sandbox/index.html)
+                                    window.open(`/sandbox/index.html?repo=${encodeURIComponent(repoUrl)}`, '_blank')
+                                }}
+                                disabled={!repoUrl}
                                 size="sm"
                                 className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 h-8"
                             >
-                                {isReviewing ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <Activity className="h-4 w-4 mr-1" />}
-                                {isReviewing ? "Reviewing..." : "Run Review"}
+                                <Activity className="h-4 w-4 mr-1" />
+                                Open in Sandbox
                             </Button>
                         </div>
-
-                        <div className="flex-1 overflow-y-auto p-2 space-y-1.5">
-                            <AnimatePresence>
-                                {reviewSteps.map((step, idx) => {
-                                    const config = STEP_CONFIG[step.type]
-                                    const Icon = config.icon
-                                    return (
-                                        <motion.div
-                                            key={idx}
-                                            initial={{ opacity: 0, x: 20 }}
-                                            animate={{ opacity: 1, x: 0 }}
-                                            className={`flex items-start gap-2 p-2 rounded-lg ${config.bg} border ${config.border}`}
-                                        >
-                                            <Icon className={`h-4 w-4 ${config.color} flex-shrink-0 mt-0.5`} />
-                                            <span className="text-xs text-gray-300 leading-relaxed">{step.message}</span>
-                                        </motion.div>
-                                    )
-                                })}
-                            </AnimatePresence>
-                            {isReviewing && (
-                                <div className="flex items-center gap-2 p-2 rounded-lg bg-white/5">
-                                    <Loader2 className="h-4 w-4 text-blue-400 animate-spin" />
-                                    <span className="text-xs text-gray-400">Processing...</span>
-                                </div>
-                            )}
-                        </div>
-
-                        {showReport && (
-                            <div className="border-t border-white/10 p-3 max-h-96 overflow-y-auto flex-shrink-0">
-                                <div className="flex items-center justify-between mb-2">
-                                    <span className="text-xs font-semibold text-gray-400 uppercase">Report</span>
-                                    <Button onClick={downloadReport} variant="ghost" size="sm" className="h-7">
-                                        <Download className="h-3 w-3 mr-1" />
-                                        <span className="text-xs">Download</span>
-                                    </Button>
-                                </div>
-                                <div className="prose prose-invert prose-sm max-w-none">
-                                    <ReactMarkdown
-                                        components={{
-                                            h3: ({ children }) => <h3 className="text-sm font-semibold text-gray-200 mt-3 mb-1">{children}</h3>,
-                                            p: ({ children }) => <p className="text-xs text-gray-400 mb-2">{children}</p>,
-                                            code: ({ children }) => <code className="bg-blue-500/10 text-cyan-400 px-1 py-0.5 rounded text-xs">{children}</code>,
-                                        }}
-                                    >
-                                        {report.slice(0, 1000)}
-                                    </ReactMarkdown>
-                                    {report.length > 1000 && <p className="text-xs text-gray-500 italic mt-2">Download full report...</p>}
-                                </div>
-                            </div>
-                        )}
                     </div>
                 )}
 
@@ -444,14 +409,16 @@ export default function IDEPage() {
                 )}
             </div>
 
-            {!showTerminal && (
-                <button
-                    onClick={() => setShowTerminal(true)}
-                    className="fixed bottom-4 right-4 p-2 bg-emerald-600 rounded-lg shadow-lg hover:bg-emerald-700 transition"
-                >
-                    <Maximize2 className="h-4 w-4 text-white" />
-                </button>
-            )}
-        </div>
+            {
+                !showTerminal && (
+                    <button
+                        onClick={() => setShowTerminal(true)}
+                        className="fixed bottom-4 right-4 p-2 bg-emerald-600 rounded-lg shadow-lg hover:bg-emerald-700 transition"
+                    >
+                        <Maximize2 className="h-4 w-4 text-white" />
+                    </button>
+                )
+            }
+        </div >
     )
 }

@@ -43,7 +43,7 @@ from langchain.tools import tool
 from langchain.agents import create_agent
 from langchain_google_genai import ChatGoogleGenerativeAI
 
-load_dotenv()
+load_dotenv(dotenv_path=r"D:\Other\Interns\GDG\GDG_MZ_Sync\Sandbox\.env.local")
 
 # ─────────────────────────────────────────────────────────────────
 # Config

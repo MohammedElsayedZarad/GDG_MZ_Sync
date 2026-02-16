@@ -1,0 +1,16 @@
+fastapi==0.109.0
+uvicorn==0.27.0
+python-dotenv==1.0.0
+sse-starlette==1.8.2
+pydantic==2.5.3
+daytona-sdk>=0.1.0
+langchain==0.1.5
+langchain-google-genai==0.0.6
+
+# Additional tools for enhanced analysis
+# Note: These are installed in the Daytona sandbox as needed
+# bandit  # Python security scanner
+# pylint  # Python linter
+# flake8  # Python linter
+# radon   # Python complexity analyzer
+# safety  # Python dependency checker
