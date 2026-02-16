@@ -1,6 +1,6 @@
 import os
 import uuid
-from typing import Literal, Optional
+from typing import Literal, Optional, Dict
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi import FastAPI, HTTPException
@@ -16,13 +16,16 @@ from schemas import (
     GenerateSimulationResponse, 
     SimulationOutput,
     ProjectChatRequest,
-    CodeReviewRequest
+    ProjectChatRequest,
+    CodeReviewRequest,
+    ChatAnalysisRequest
 )
 from llm_service import (
     generate_simulation_content, 
     generate_chat_response, 
     generate_chat_response, 
-    generate_code_review
+    generate_code_review,
+    generate_chat_analysis
 )
 from repo_service import repo_service
 from daytona_service import daytona_service
@@ -91,7 +94,7 @@ if not os.environ.get("GEMINI_API_KEY"):
 async def generate_simulation(request: GenerateSimulationRequest):
     # 1. Generate content using LLM
     try:
-        simulation_data: SimulationOutput = generate_simulation_content(
+        simulation_data: SimulationOutput = await generate_simulation_content(
             request.title, request.context, request.level
         )
     except Exception as e:
@@ -176,6 +179,14 @@ async def code_review(req: CodeReviewRequest):
         return generate_code_review(req)
     except Exception as e:
         print(f"Review Error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/analyze-chat")
+async def analyze_chat(req: ChatAnalysisRequest):
+    try:
+        return generate_chat_analysis(req)
+    except Exception as e:
+        print(f"Analysis Error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/api/repo/extract")
@@ -266,6 +277,9 @@ async def create_workspace(request: CreateWorkspaceRequest):
     )
     return workspace
 
+class InitSessionRequest(BaseModel):
+    files: Dict[str, str]
+
 @app.post("/api/repo/branches")
 async def list_branches(request: RepoRequest):
     branches = await run_in_threadpool(
@@ -274,6 +288,16 @@ async def list_branches(request: RepoRequest):
         request.access_token
     )
     return {"branches": branches}
+
+@app.post("/api/repo/init")
+async def init_session(request: InitSessionRequest):
+    session_id = await run_in_threadpool(repo_service.create_session, request.files)
+    return {"session_id": session_id}
+
+@app.get("/api/repo/session/{session_id}")
+async def get_session(session_id: str):
+    files = await run_in_threadpool(repo_service.get_session_files, session_id)
+    return {"files": files}
 
 
 

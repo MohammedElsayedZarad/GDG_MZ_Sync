@@ -26,7 +26,7 @@ export default function ConnectionModal({ isOpen, onClose, onConnect }: Connecti
     // Debounced branch fetching
     useEffect(() => {
         const fetchBranches = async () => {
-            if (!url || !url.includes("github.com")) return;
+            if (!url || typeof url !== 'string' || !url.includes("github.com")) return;
             setLoadingBranches(true);
             try {
                 const res = await fetch("http://127.0.0.1:8000/api/repo/branches", {
@@ -35,7 +35,7 @@ export default function ConnectionModal({ isOpen, onClose, onConnect }: Connecti
                     body: JSON.stringify({ github_url: url, access_token: token }),
                 });
                 const data = await res.json();
-                if (data.branches) {
+                if (data.branches && Array.isArray(data.branches)) {
                     setBranches(data.branches);
                     if (data.branches.includes("main")) setBranch("main");
                     else if (data.branches.includes("master")) setBranch("master");

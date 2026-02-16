@@ -17,6 +17,7 @@ type FileMap = { [path: string]: string };
 export default function IDEPage() {
     const searchParams = useSearchParams();
     const initialUrl = searchParams.get("url") || "";
+    const initialSessionId = searchParams.get("session_id");
 
     const [repoUrl, setRepoUrl] = useState(initialUrl);
     const [token, setToken] = useState("");
@@ -24,13 +25,27 @@ export default function IDEPage() {
     const [selectedFile, setSelectedFile] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const [workspaceId, setWorkspaceId] = useState<string | null>(null);
-    const [sessionId, setSessionId] = useState<string | null>(null);
+    const [sessionId, setSessionId] = useState<string | null>(initialSessionId);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    // Initial open if no files
+    // Initial open if no files and no session
     useEffect(() => {
-        if (Object.keys(files).length === 0) setIsModalOpen(true);
-    }, []);
+        if (initialSessionId) {
+            setLoading(true);
+            fetch(`http://127.0.0.1:8000/api/repo/session/${initialSessionId}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.files) {
+                        setFiles(data.files);
+                        toast.success("Loaded session files");
+                    }
+                })
+                .catch(err => toast.error("Failed to load session"))
+                .finally(() => setLoading(false));
+        } else if (Object.keys(files).length === 0) {
+            setIsModalOpen(true);
+        }
+    }, [initialSessionId]);
 
     const handleConnect = async (url: string, branch: string, token: string) => {
         // Update state but don't depend on it for this call

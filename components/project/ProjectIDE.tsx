@@ -2,7 +2,8 @@
 
 import { useState, useCallback, useRef } from "react"
 import dynamic from "next/dynamic"
-import { Play, Loader2, CheckCircle, XCircle, Terminal, FileCode, ChevronUp, ChevronDown } from "lucide-react"
+import { Play, Loader2, CheckCircle, XCircle, Terminal, FileCode, ChevronUp, ChevronDown, ExternalLink } from "lucide-react"
+import Link from "next/link"
 
 import { Button } from "@/components/ui/button"
 import { postCodeReview, type ChatLanguage } from "@/lib/api"
@@ -35,6 +36,7 @@ export function ProjectIDE({ task }: ProjectIDEProps) {
     code,
     setCode,
     getPrimaryCode,
+    sessionId,
   } = useProjectWorkspace()
 
   const [reviewLoading, setReviewLoading] = useState(false)
@@ -172,6 +174,12 @@ export function ProjectIDE({ task }: ProjectIDEProps) {
               <span className="text-sm font-medium text-foreground truncate">{activeFileId}</span>
             </div>
             <div className="flex items-center gap-1">
+              <Link href={sessionId ? `/ide?session_id=${sessionId}` : "/ide"} target="_blank">
+                <Button size="sm" variant="ghost" className="h-7 gap-1 text-xs text-muted-foreground hover:text-foreground">
+                  <ExternalLink className="h-3.5 w-3.5" />
+                  Full IDE
+                </Button>
+              </Link>
               <Button
                 size="sm"
                 variant="outline"
@@ -243,11 +251,10 @@ export function ProjectIDE({ task }: ProjectIDEProps) {
       {/* Review feedback panel (unchanged) */}
       {feedback !== null && (
         <div
-          className={`shrink-0 border-t p-4 max-h-48 overflow-y-auto ${
-            approved === true
-              ? "border-emerald-500/30 bg-emerald-500/10 dark:bg-emerald-500/15"
-              : "border-amber-500/30 bg-amber-500/10 dark:bg-amber-500/15"
-          }`}
+          className={`shrink-0 border-t p-4 max-h-48 overflow-y-auto ${approved === true
+            ? "border-emerald-500/30 bg-emerald-500/10 dark:bg-emerald-500/15"
+            : "border-amber-500/30 bg-amber-500/10 dark:bg-amber-500/15"
+            }`}
         >
           <div className="flex items-center gap-2 mb-2">
             {approved === true ? (

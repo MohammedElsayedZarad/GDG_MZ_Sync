@@ -36,9 +36,9 @@ function toggleInArray<T>(arr: T[], item: T): T[] {
 }
 
 export function TaskFilters({
-    selectedTracks,
-    selectedDifficulties,
-    selectedLevels,
+    selectedTracks = [],
+    selectedDifficulties = [],
+    selectedLevels = [],
     searchQuery,
     onTracksChange,
     onDifficultiesChange,
