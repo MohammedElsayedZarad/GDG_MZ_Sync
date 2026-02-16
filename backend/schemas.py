@@ -82,3 +82,26 @@ class CodeReviewRequest(BaseModel):
     code: str
     language: str
     language_hint: Optional[Literal["en", "ar"]] = None
+
+
+# --- Interview Schemas ---
+
+class InterviewChatRequest(BaseModel):
+    """
+    Request for the AI Interviewer chat.
+    Supports text, history, job context, and optional image (base64) for vision analysis.
+    """
+    messages: List[ChatMessage]
+    job_description: str
+    language: Literal["en", "ar"] = "en"
+    image_base64: Optional[str] = None  # For vision analysis
+    # Optional: Previous notes or state if we want to be stateless on backend
+
+
+class InterviewFeedbackRequest(BaseModel):
+    """
+    Request to generate the final feedback report.
+    """
+    messages: List[ChatMessage]
+    job_description: str
+    language: Literal["en", "ar"] = "en"

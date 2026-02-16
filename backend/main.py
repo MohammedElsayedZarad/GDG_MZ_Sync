@@ -13,12 +13,16 @@ from schemas import (
     GenerateSimulationResponse, 
     SimulationOutput,
     ProjectChatRequest,
-    CodeReviewRequest
+    CodeReviewRequest,
+    InterviewChatRequest,
+    InterviewFeedbackRequest
 )
 from llm_service import (
     generate_simulation_content, 
     generate_chat_response, 
-    generate_code_review
+    generate_code_review,
+    generate_interview_chat,
+    generate_interview_feedback
 )
 
 # Load environment: backend/.env first, then project root .env.local and .env
@@ -166,3 +170,22 @@ async def code_review(req: CodeReviewRequest):
     except Exception as e:
         print(f"Review Error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/interview/chat")
+async def interview_chat(req: InterviewChatRequest):
+    try:
+        return generate_interview_chat(req)
+    except Exception as e:
+        print(f"Interview Chat Error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/interview/feedback")
+async def interview_feedback(req: InterviewFeedbackRequest):
+    try:
+        return generate_interview_feedback(req)
+    except Exception as e:
+        print(f"Interview Feedback Error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
