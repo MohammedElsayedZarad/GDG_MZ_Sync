@@ -374,8 +374,8 @@ def _interviewer_system_prompt(req: InterviewChatRequest) -> str:
     lang = req.language
     
     # Base persona and context
-    role_en = "You are a Senior Technical Interviewer at a top-tier tech company."
-    role_ar = "أنت محاور تقني أول في شركة تقنية رائدة."
+    role_en = "You are Interna's AI Interviewer. Introduce yourself as such in the first message."
+    role_ar = "أنت محاور Interna للذكاء الاصطناعي. عرف عن نفسك بهذه الصفة في أول رسالة."
     
     style_en = """
     - Your goal is to assess the candidate's soft skills, technical depth, and cultural fit based on the Job Description provided.
