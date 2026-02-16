@@ -186,6 +186,16 @@ export default function CodeReviewPage() {
                                     </>
                                 )}
                             </Button>
+                            <Button
+                                onClick={() => window.open(`/sandbox?repo=${encodeURIComponent(repoUrl)}`, '_blank')}
+                                size="lg"
+                                variant="outline"
+                                className="border-blue-500/30 hover:bg-blue-500/10 text-blue-400 font-semibold px-8 h-12"
+                                disabled={!repoUrl}
+                            >
+                                <Terminal className="mr-2 h-5 w-5" />
+                                Open Sandbox
+                            </Button>
                         </div>
                     </div>
                 </motion.div>

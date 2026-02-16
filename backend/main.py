@@ -240,6 +240,20 @@ class FileOperationRequest(BaseModel):
     rel_path: str
     content: Optional[str] = None
 
+@app.get("/review/{job_id}/files")
+async def get_review_files(job_id: str):
+    """Get all review data including files, reviews, score, and report for sandbox display"""
+    if job_id not in review_jobs:
+        raise HTTPException(status_code=404, detail="Review job not found")
+    
+    job_data = review_jobs[job_id]
+    
+    return {
+        "files": job_data.get("files", {}),
+        "reviews": job_data.get("reviews", []),
+        "score": job_data.get("score", 0),
+        "report": job_data.get("report", "")
+    }
 @app.post("/api/repo/file/update")
 async def update_file(request: FileOperationRequest):
     if request.content is None:
@@ -456,6 +470,16 @@ async def start_review(request: ReviewRequest):
 
 @app.get("/review/{job_id}")
 async def stream_review(job_id: str):
+    """SSE stream for comprehensive code review with execution, linting, AI analysis, and scoring"""
+    from enhanced_review_service import comprehensive_code_review_stream
+    
+    if job_id not in review_jobs:
+        async def error_gen():
+            yield {"event": "error", "data": '{"message": "Invalid job ID"}'}
+        return EventSourceResponse(error_gen())
+    
+    job = review_jobs[job_id]
+    return EventSourceResponse(comprehensive_code_review_stream(job_id, job["repo_url"], review_jobs))
     """SSE stream for code review progress"""
     
     async def event_generator():

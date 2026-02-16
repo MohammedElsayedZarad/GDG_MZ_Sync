@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Code Review Agent</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     body {
       font-family: 'Segoe UI', system-ui, sans-serif;
@@ -65,8 +70,13 @@
       transition: border-color 0.2s;
     }
 
-    #repoInput:focus { border-color: #58a6ff; }
-    #repoInput::placeholder { color: #484f58; }
+    #repoInput:focus {
+      border-color: #58a6ff;
+    }
+
+    #repoInput::placeholder {
+      color: #484f58;
+    }
 
     #reviewBtn {
       background: #238636;
@@ -81,12 +91,24 @@
       white-space: nowrap;
     }
 
-    #reviewBtn:hover:not(:disabled) { background: #2ea043; }
-    #reviewBtn:active:not(:disabled) { transform: scale(0.97); }
-    #reviewBtn:disabled { background: #1f2937; color: #6b7280; cursor: not-allowed; }
+    #reviewBtn:hover:not(:disabled) {
+      background: #2ea043;
+    }
+
+    #reviewBtn:active:not(:disabled) {
+      transform: scale(0.97);
+    }
+
+    #reviewBtn:disabled {
+      background: #1f2937;
+      color: #6b7280;
+      cursor: not-allowed;
+    }
 
     /* ── Progress panel ── */
-    #progressPanel { display: none; }
+    #progressPanel {
+      display: none;
+    }
 
     .panel-title {
       font-size: 0.8rem;
@@ -107,8 +129,14 @@
       padding-right: 4px;
     }
 
-    #stepList::-webkit-scrollbar { width: 4px; }
-    #stepList::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
+    #stepList::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    #stepList::-webkit-scrollbar-thumb {
+      background: #30363d;
+      border-radius: 4px;
+    }
 
     .step-item {
       display: flex;
@@ -120,30 +148,75 @@
       animation: fadeIn 0.25s ease;
     }
 
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; } }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
 
-    .step-item.step    { background: #1c2128; color: #8b949e; }
-    .step-item.file    { background: #1c2128; color: #79c0ff; }
-    .step-item.execute { background: #1c2128; color: #a5f3ab; }
-    .step-item.lint    { background: #1c2128; color: #f9c513; }
-    .step-item.error   { background: #2d1b1b; color: #f87171; }
-    .step-item.done    { background: #1a2d1a; color: #56d364; font-weight: 600; }
+      to {
+        opacity: 1;
+      }
+    }
 
-    .step-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+    .step-item.step {
+      background: #1c2128;
+      color: #8b949e;
+    }
+
+    .step-item.file {
+      background: #1c2128;
+      color: #79c0ff;
+    }
+
+    .step-item.execute {
+      background: #1c2128;
+      color: #a5f3ab;
+    }
+
+    .step-item.lint {
+      background: #1c2128;
+      color: #f9c513;
+    }
+
+    .step-item.error {
+      background: #2d1b1b;
+      color: #f87171;
+    }
+
+    .step-item.done {
+      background: #1a2d1a;
+      color: #56d364;
+      font-weight: 600;
+    }
+
+    .step-icon {
+      font-size: 1rem;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
 
     /* Spinner */
     .spinner {
-      width: 18px; height: 18px;
+      width: 18px;
+      height: 18px;
       border: 2px solid #30363d;
       border-top-color: #58a6ff;
       border-radius: 50%;
       animation: spin 0.7s linear infinite;
       flex-shrink: 0;
     }
-    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
 
     /* ── Report panel ── */
-    #reportPanel { display: none; }
+    #reportPanel {
+      display: none;
+    }
 
     #reportContent {
       background: #0d1117;
@@ -155,22 +228,94 @@
     }
 
     /* Markdown styling */
-    #reportContent h1 { font-size: 1.5rem; color: #58a6ff; margin-bottom: 8px; }
-    #reportContent h2 { font-size: 1.1rem; color: #e6edf3; margin: 24px 0 10px; border-bottom: 1px solid #30363d; padding-bottom: 6px; }
-    #reportContent h3 { font-size: 0.98rem; color: #cdd9e5; margin: 20px 0 8px; }
-    #reportContent p  { color: #8b949e; margin-bottom: 10px; }
-    #reportContent ul, #reportContent ol { padding-left: 20px; color: #8b949e; margin-bottom: 10px; }
-    #reportContent li { margin-bottom: 4px; }
-    #reportContent strong { color: #e6edf3; }
-    #reportContent code { background: #1c2128; padding: 2px 6px; border-radius: 4px; font-size: 0.85rem; color: #79c0ff; }
-    #reportContent hr { border: none; border-top: 1px solid #30363d; margin: 20px 0; }
+    #reportContent h1 {
+      font-size: 1.5rem;
+      color: #58a6ff;
+      margin-bottom: 8px;
+    }
+
+    #reportContent h2 {
+      font-size: 1.1rem;
+      color: #e6edf3;
+      margin: 24px 0 10px;
+      border-bottom: 1px solid #30363d;
+      padding-bottom: 6px;
+    }
+
+    #reportContent h3 {
+      font-size: 0.98rem;
+      color: #cdd9e5;
+      margin: 20px 0 8px;
+    }
+
+    #reportContent p {
+      color: #8b949e;
+      margin-bottom: 10px;
+    }
+
+    #reportContent ul,
+    #reportContent ol {
+      padding-left: 20px;
+      color: #8b949e;
+      margin-bottom: 10px;
+    }
+
+    #reportContent li {
+      margin-bottom: 4px;
+    }
+
+    #reportContent strong {
+      color: #e6edf3;
+    }
+
+    #reportContent code {
+      background: #1c2128;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      color: #79c0ff;
+    }
+
+    #reportContent hr {
+      border: none;
+      border-top: 1px solid #30363d;
+      margin: 20px 0;
+    }
 
     /* PASS / WARN / FAIL badges */
-    #reportContent h3 { position: relative; }
+    #reportContent h3 {
+      position: relative;
+    }
 
-    .badge-pass  { background: #1a3a1a; color: #56d364; border: 1px solid #238636; border-radius: 4px; padding: 1px 7px; font-size: 0.75rem; font-weight: 700; }
-    .badge-warn  { background: #2d2200; color: #f9c513; border: 1px solid #b08800; border-radius: 4px; padding: 1px 7px; font-size: 0.75rem; font-weight: 700; }
-    .badge-fail  { background: #2d1010; color: #f87171; border: 1px solid #8b0000; border-radius: 4px; padding: 1px 7px; font-size: 0.75rem; font-weight: 700; }
+    .badge-pass {
+      background: #1a3a1a;
+      color: #56d364;
+      border: 1px solid #238636;
+      border-radius: 4px;
+      padding: 1px 7px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .badge-warn {
+      background: #2d2200;
+      color: #f9c513;
+      border: 1px solid #b08800;
+      border-radius: 4px;
+      padding: 1px 7px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .badge-fail {
+      background: #2d1010;
+      color: #f87171;
+      border: 1px solid #8b0000;
+      border-radius: 4px;
+      padding: 1px 7px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
 
     .report-actions {
       display: flex;
@@ -189,9 +334,13 @@
       transition: all 0.2s;
     }
 
-    .download-btn:hover { background: #30363d; color: #e6edf3; }
+    .download-btn:hover {
+      background: #30363d;
+      color: #e6edf3;
+    }
   </style>
 </head>
+
 <body>
 
   <header>
@@ -202,12 +351,7 @@
   <!-- Input card -->
   <div class="card">
     <div class="input-row">
-      <input
-        id="repoInput"
-        type="text"
-        placeholder="https://github.com/owner/repo"
-        value=""
-      />
+      <input id="repoInput" type="text" placeholder="https://github.com/owner/repo" value="" />
       <button id="reviewBtn" onclick="startReview()">▶ Run Review</button>
     </div>
   </div>
@@ -229,17 +373,17 @@
 
   <script>
     const API_BASE = "http://localhost:8000";
-    let rawReport  = "";
+    let rawReport = "";
     let eventSource = null;
 
     const STEP_ICONS = {
-      step:    "⚙️",
-      file:    "📄",
+      step: "⚙️",
+      file: "📄",
       execute: "▶️",
-      lint:    "🔍",
-      error:   "❌",
-      done:    "✅",
-      report:  "📋",
+      lint: "🔍",
+      error: "❌",
+      done: "✅",
+      report: "📋",
     };
 
     function addStep(type, message) {
@@ -267,7 +411,7 @@
 
     function renderReport(markdown) {
       rawReport = markdown;
-      const panel  = document.getElementById("reportPanel");
+      const panel = document.getElementById("reportPanel");
       const content = document.getElementById("reportContent");
 
       // Parse markdown
@@ -286,8 +430,8 @@
 
     function downloadReport() {
       const blob = new Blob([rawReport], { type: "text/markdown" });
-      const a    = document.createElement("a");
-      a.href     = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
       a.download = "code_review_report.md";
       a.click();
     }
@@ -300,10 +444,10 @@
       }
 
       // Reset UI
-      document.getElementById("stepList").innerHTML   = "";
+      document.getElementById("stepList").innerHTML = "";
       document.getElementById("reportPanel").style.display = "none";
       document.getElementById("progressPanel").style.display = "block";
-      document.getElementById("reviewBtn").disabled   = true;
+      document.getElementById("reviewBtn").disabled = true;
       document.getElementById("reviewBtn").textContent = "⏳ Running...";
       rawReport = "";
 
@@ -370,17 +514,36 @@
 
     function resetBtn() {
       const btn = document.getElementById("reviewBtn");
-      btn.disabled  = false;
+      btn.disabled = false;
       btn.textContent = "▶ Run Review";
       // Remove spinner
       const spinner = document.getElementById("stepList").querySelector(".spinner-item");
       if (spinner) spinner.remove();
     }
 
+
     // Allow pressing Enter in the input
     document.getElementById("repoInput").addEventListener("keydown", (e) => {
       if (e.key === "Enter") startReview();
     });
+
+    // Auto-fill repo URL from query parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const repoParam = urlParams.get('repo');
+    if (repoParam) {
+      document.getElementById("repoInput").value = repoParam;
+    }
+    // Add this at the bottom of your script in index.html
+window.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const repoParam = urlParams.get('repo');
+    if (repoParam) {
+        document.getElementById("repoInput").value = repoParam;
+        // Automatically click the button or call the function
+        startReview(); 
+    }
+});
   </script>
 </body>
+
 </html>
