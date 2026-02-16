@@ -13,6 +13,7 @@ import {
   BookOpen,
   Target,
   Code2,
+  Mic,
 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
@@ -33,10 +34,11 @@ const navItems = [
   { href: "/ide", label: "IDE", icon: Code2, exact: false },
   { href: "/dashboard/progress", label: "My Progress", icon: Target, exact: false },
   { href: "/dashboard/resources", label: "Resources", icon: BookOpen, exact: false },
+  { href: "/dashboard/interview", label: "Interview Practice", icon: Mic, exact: false },
 ]
 
 const bottomItems = [
-  { href: "/profile", label: "Profile", icon: User },
+  { href: "/dashboard/profile", label: "Profile", icon: User },
   { href: "#", label: "Log out", icon: LogOut, action: "logout" },
 ]
 
