@@ -20,10 +20,9 @@ from schemas import (
     ProjectChatRequest,
     CodeReviewRequest,
     ChatAnalysisRequest,
-    ChatAnalysisResponse
+    ChatAnalysisResponse,
     InterviewChatRequest,
     InterviewFeedbackRequest,
-    ChatAnalysisRequest,
     RepoRequest
 )
 from llm_service import (
