@@ -6,16 +6,18 @@ import { Sparkles, FolderKanban } from "lucide-react"
 
 import { TaskCard } from "@/components/dashboard/TaskCard"
 import { TaskFilters } from "@/components/dashboard/TaskFilters"
-import { TASKS, type TaskField } from "@/lib/tasks"
+import { TASKS, type TaskField, type TaskDifficulty } from "@/lib/tasks"
 
 export function TaskGrid() {
     const [selectedTracks, setSelectedTracks] = useState<TaskField[]>([])
+    const [selectedDifficulties, setSelectedDifficulties] = useState<TaskDifficulty[]>([])
     const [selectedLevels, setSelectedLevels] = useState<number[]>([])
     const [searchQuery, setSearchQuery] = useState("")
 
     const filteredTasks = useMemo(() => {
         return TASKS.filter((task) => {
             if (selectedTracks.length > 0 && !selectedTracks.includes(task.field)) return false
+            if (selectedDifficulties.length > 0 && !selectedDifficulties.includes(task.difficulty)) return false
             if (selectedLevels.length > 0 && !selectedLevels.includes(task.level)) return false
             if (searchQuery) {
                 const q = searchQuery.toLowerCase()
@@ -44,9 +46,11 @@ export function TaskGrid() {
             </motion.div>
             <TaskFilters
                 selectedTracks={selectedTracks}
+                selectedDifficulties={selectedDifficulties}
                 selectedLevels={selectedLevels}
                 searchQuery={searchQuery}
                 onTracksChange={setSelectedTracks}
+                onDifficultiesChange={setSelectedDifficulties}
                 onLevelsChange={setSelectedLevels}
                 onSearchChange={setSearchQuery}
             />

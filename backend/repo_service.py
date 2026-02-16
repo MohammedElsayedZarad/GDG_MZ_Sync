@@ -19,6 +19,42 @@ class RepoService:
     def __init__(self):
         self.active_sessions: Dict[str, str] = {}
 
+    def create_session(self, initial_files: Dict[str, str]) -> str:
+        import uuid
+        session_id = str(uuid.uuid4())
+        temp_root = tempfile.mkdtemp()
+        self.active_sessions[session_id] = temp_root
+        
+        repo_path = os.path.join(temp_root, "repo")
+        os.makedirs(repo_path, exist_ok=True)
+
+        for rel_path, content in initial_files.items():
+            full_path = os.path.join(repo_path, rel_path)
+            os.makedirs(os.path.dirname(full_path), exist_ok=True)
+            with open(full_path, "w", encoding="utf-8") as f:
+                f.write(content)
+        
+        return session_id
+
+    def get_session_files(self, session_id: str) -> Dict[str, str]:
+        if session_id not in self.active_sessions:
+            raise HTTPException(status_code=404, detail="Session not found")
+        
+        temp_root = self.active_sessions[session_id]
+        repo_path = os.path.join(temp_root, "repo")
+        repo_data = {}
+        
+        for root, _, files in os.walk(repo_path):
+            for file in files:
+                f_path = os.path.join(root, file)
+                rel_path = os.path.relpath(f_path, repo_path).replace("\\", "/")
+                try:
+                    with open(f_path, "r", encoding="utf-8") as f:
+                        repo_data[rel_path] = f.read()
+                except Exception:
+                    pass
+        return repo_data
+
     def clone_and_read(self, github_url: str, branch: str = "main", access_token: Optional[str] = None) -> Dict[str, Any]:
         import uuid
         session_id = str(uuid.uuid4())

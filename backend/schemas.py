@@ -13,6 +13,22 @@ class Persona(BaseModel):
     system_prompt: str
     initial_message: str
 
+class ProjectStructure(BaseModel):
+    title: str
+    domain: str
+    difficulty: str
+    estimated_duration: str
+    tech_stack: List[str]
+    overview: str
+    learning_objectives: List[str]
+    functional_requirements: List[str]
+    non_functional_requirements: List[str]
+    milestones: List[Milestone]
+
+class PersonaList(BaseModel):
+    personas: List[Persona]
+    team: List[Persona] = []
+
 class SimulationOutput(BaseModel):
     title: str
     domain: str
@@ -25,11 +41,13 @@ class SimulationOutput(BaseModel):
     non_functional_requirements: List[str]
     milestones: List[Milestone]
     personas: List[Persona]
+    team: List[Persona] = []
 
 class GenerateSimulationRequest(BaseModel):
     title: str
     context: str
     level: str  # e.g. "L0", "L5", "L10"
+    team_mode: Literal["solo", "group"] = "group"
 
 class GenerateSimulationResponse(BaseModel):
     simulation_id: str
@@ -94,3 +112,20 @@ class RepoRequest(BaseModel):
         if "github.com" not in v:
             raise ValueError("Must be a valid GitHub URL")
         return v.strip().rstrip('/')
+
+class SkillMetric(BaseModel):
+    name: str
+    score: int  # 0-100
+    feedback: str
+
+class ChatAnalysisRequest(BaseModel):
+    messages: List[ChatMessage]
+    project_title: str
+    project_description: str
+    client_persona: str
+
+class ChatAnalysisResponse(BaseModel):
+    soft_skills: List[SkillMetric]
+    technical_skills: List[SkillMetric]
+    summary: str
+    overall_score: int

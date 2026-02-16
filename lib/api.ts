@@ -119,12 +119,14 @@ export interface SimulationData {
   non_functional_requirements: string[]
   milestones: SimulationMilestone[]
   personas: SimulationPersona[]
+  team: SimulationPersona[]
 }
 
 export interface GenerateSimulationRequest {
   title: string
   context: string
   level: string // e.g. "L3"
+  team_mode?: "solo" | "group"
 }
 
 export interface GenerateSimulationResponse {
@@ -148,4 +150,39 @@ export async function generateSimulation(body: GenerateSimulationRequest): Promi
     throw new Error(err)
   }
   return data as GenerateSimulationResponse
+}
+
+// ── Chat Analysis ──────────────────────────────────────────
+
+export interface SkillMetric {
+  name: string
+  score: number // 0-100
+  feedback: string
+}
+
+export interface ChatAnalysisRequest {
+  messages: ChatMessage[]
+  project_title: string
+  project_description: string
+  client_persona: string
+}
+
+export interface ChatAnalysisResponse {
+  soft_skills: SkillMetric[]
+  technical_skills: SkillMetric[]
+  summary: string
+  overall_score: number
+}
+
+export async function postChatAnalysis(body: ChatAnalysisRequest): Promise<ChatAnalysisResponse> {
+  const res = await fetch(`${API_BASE}/api/analyze-chat`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  })
+  if (!res.ok) {
+    const err = await res.text()
+    throw new Error(err || `Analysis failed: ${res.status}`)
+  }
+  return res.json()
 }
