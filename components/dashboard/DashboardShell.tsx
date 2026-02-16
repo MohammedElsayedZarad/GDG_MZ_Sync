@@ -20,7 +20,7 @@ function DashboardShellInner({
 }) {
   const pathname = usePathname()
   const { width } = useSidebar()
-  const isProjectPage = pathname?.startsWith("/dashboard/project")
+  const isProjectPage = /^\/dashboard\/project(\/|$)/.test(pathname ?? "")
   const isIDEPage = pathname === "/ide"
 
   if (isProjectPage || isIDEPage) {
