@@ -120,7 +120,7 @@ Types are auto-generated in `lib/supabase/database.types.ts`.
 |----------|----------|-------------|
 | `NEXT_PUBLIC_SUPABASE_URL` | Yes | Supabase project URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes | Supabase anonymous/public key |
-| `NEXT_PUBLIC_API_URL` | No | FastAPI backend URL (default: `http://127.0.0.1:8000`) |
+| `NEXT_PUBLIC_API_URL` | No | FastAPI backend URL (default: `http://127.0.0.1:8001`) |
 
 Backend (`backend/.env`): copy from `backend/.env.example`. Set `GEMINI_API_KEY` for AI chat and code review.
 

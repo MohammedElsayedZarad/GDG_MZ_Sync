@@ -231,7 +231,7 @@ Your response must use **Markdown** formatting (bold, lists, code blocks) and fo
 {code_ctx.strip()}
 """
         else:
-            code_block = f"\n\n**Current code from the intern** (you may reference specific lines or request changes):\n```\n{code_ctx.strip()[:8000]}\n```"
+            code_block = f"\n\n**Current code from the intern** (you may reference specific lines or request changes):\n```\n{code_ctx.strip()[:8001]}\n```"
 
     persona = getattr(req, "persona", None)
     sim_ctx = getattr(req, "simulation_context", None)

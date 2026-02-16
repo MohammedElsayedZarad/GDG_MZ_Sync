@@ -17,7 +17,7 @@ Event types sent to frontend:
   { "type": "done",    "message": "Review complete" }
 
 Run:
-    uvicorn api:app --reload --port 8000
+    uvicorn api:app --reload --port 8001
 
 Requirements:
     pip install daytona langchain langchain-google-genai fastapi uvicorn python-dotenv sse-starlette
@@ -43,7 +43,7 @@ from langchain.tools import tool
 from langchain.agents import create_agent
 from langchain_google_genai import ChatGoogleGenerativeAI
 
-load_dotenv(dotenv_path=r"D:\Other\Interns\GDG\GDG_MZ_Sync\Sandbox\.env.local")
+load_dotenv(dotenv_path=r"D:\Other\Interns\GDG\GDG_MZ_Sync\public\Sandbox\.env.local")
 
 # ─────────────────────────────────────────────────────────────────
 # Config
