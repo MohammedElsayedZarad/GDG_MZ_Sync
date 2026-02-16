@@ -54,7 +54,7 @@ export function AppSidebar() {
   }
 
   const isActive = (href: string) => {
-    if (href === "/dashboard") return pathname === "/dashboard" || pathname?.startsWith("/dashboard/project")
+    if (href === "/dashboard") return pathname === "/dashboard" || pathname?.startsWith("/project/")
     return pathname?.startsWith(href)
   }
 
