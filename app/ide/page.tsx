@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 // We'll create these components next
 import FileExplorer from "../../components/ide/FileExplorer";
@@ -15,6 +15,14 @@ import ConnectionModal from "../../components/ide/ConnectionModal";
 type FileMap = { [path: string]: string };
 
 export default function IDEPage() {
+    return (
+        <Suspense fallback={<div className="h-screen flex items-center justify-center bg-[#1e1e1e] text-white">Loading IDE...</div>}>
+            <IDEPageInner />
+        </Suspense>
+    );
+}
+
+function IDEPageInner() {
     const searchParams = useSearchParams();
     const initialUrl = searchParams.get("url") || "";
     const initialSessionId = searchParams.get("session_id");
