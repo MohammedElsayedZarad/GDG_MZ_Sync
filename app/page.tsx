@@ -72,7 +72,7 @@ export default function LandingPage() {
     }
 
     // Run at multiple intervals to catch late SDK injection
-    const timers = [200, 500, 1000, 2000, 3000, 5000, 8000].map(ms => setTimeout(removeBadge, ms))
+    const timers = [200, 500, 1000, 2000, 3000, 5000, 8001].map(ms => setTimeout(removeBadge, ms))
 
     // Watch for any DOM changes
     const observer = new MutationObserver(() => {

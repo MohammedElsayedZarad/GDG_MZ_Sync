@@ -2,7 +2,7 @@ import requests
 import json
 
 # Test backend connectivity
-backend_url = "http://127.0.0.1:8000"
+backend_url = "http://127.0.0.1:8001"
 
 print("Testing backend connectivity...")
 print(f"Backend URL: {backend_url}")

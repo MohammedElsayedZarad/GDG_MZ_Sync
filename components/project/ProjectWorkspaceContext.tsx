@@ -59,7 +59,7 @@ export function ProjectWorkspaceProvider({
   useEffect(() => {
     const initSession = async () => {
       try {
-        const res = await fetch("http://127.0.0.1:8000/api/repo/init", {
+        const res = await fetch("http://127.0.0.1:8001/api/repo/init", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ files: defaultFiles }),
@@ -81,7 +81,7 @@ export function ProjectWorkspaceProvider({
     setFiles((prev) => ({ ...prev, [path]: content }))
     if (sessionId) {
       // Background sync
-      fetch("http://127.0.0.1:8000/api/repo/file/update", {
+      fetch("http://127.0.0.1:8001/api/repo/file/update", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ session_id: sessionId, rel_path: path, content }),
@@ -93,7 +93,7 @@ export function ProjectWorkspaceProvider({
     setFiles((prev) => ({ ...prev, [path]: content }))
     setActiveFileIdState(path)
     if (sessionId) {
-      fetch("http://127.0.0.1:8000/api/repo/file/create", {
+      fetch("http://127.0.0.1:8001/api/repo/file/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ session_id: sessionId, rel_path: path, content }),
@@ -110,7 +110,7 @@ export function ProjectWorkspaceProvider({
       setActiveFileIdState(Object.keys(next)[0])
     }
     if (sessionId) {
-      fetch("http://127.0.0.1:8000/api/repo/file/delete", {
+      fetch("http://127.0.0.1:8001/api/repo/file/delete", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ session_id: sessionId, rel_path: path }),

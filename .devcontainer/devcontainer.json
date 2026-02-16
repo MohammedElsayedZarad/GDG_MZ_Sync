@@ -7,10 +7,17 @@
     },
     "ghcr.io/devcontainers/features/git:1": {}
   },
-  "forwardPorts": [3000, 8000],
+  "forwardPorts": [
+    3000,
+    8001
+  ],
   "portsAttributes": {
-    "3000": { "label": "Next.js" },
-    "8000": { "label": "Backend API" }
+    "3000": {
+      "label": "Next.js"
+    },
+    "8001": {
+      "label": "Backend API"
+    }
   },
   "postCreateCommand": "npm ci && pip install -r backend/requirements.txt",
   "customizations": {

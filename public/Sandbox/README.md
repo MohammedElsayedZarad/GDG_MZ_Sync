@@ -108,19 +108,19 @@ An enterprise-grade AI-powered code review system that provides comprehensive an
 
 2. **Start the FastAPI server**
    ```bash
-   uvicorn api:app --reload --port 8000
+   uvicorn api:app --reload --port 8001
    ```
 
    You should see:
    ```
-   INFO:     Uvicorn running on http://127.0.0.1:8000
+   INFO:     Uvicorn running on http://127.0.0.1:8001
    INFO:     Application startup complete.
    ```
 
 3. **Verify the API is running**
-   Visit http://localhost:8000/health in your browser or:
+   Visit http://localhost:8001/health in your browser or:
    ```bash
-   curl http://localhost:8000/health
+   curl http://localhost:8001/health
    ```
 
 ### Opening the Frontend
@@ -339,7 +339,7 @@ Health check endpoint.
    - Restart the server after adding the key
 
 2. **"Connection to server lost"**
-   - Check that the backend is running on port 8000
+   - Check that the backend is running on port 8001
    - Verify firewall settings allow localhost connections
 
 3. **"Review timed out"**
@@ -388,7 +388,7 @@ repos = [
 
 for repo in repos:
     response = requests.post(
-        "http://localhost:8000/review",
+        "http://localhost:8001/review",
         json={"repo_url": repo}
     )
     print(f"Started review: {response.json()['job_id']}")
@@ -436,7 +436,7 @@ MIT License - feel free to use this in your projects!
 For issues or questions:
 - Open a GitHub issue
 - Check the troubleshooting section
-- Review API documentation at http://localhost:8000/docs
+- Review API documentation at http://localhost:8001/docs
 
 ---
 

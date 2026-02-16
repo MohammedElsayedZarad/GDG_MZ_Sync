@@ -7,7 +7,7 @@ import ReactMarkdown from "react-markdown"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
-const API_BASE = "http://localhost:8000"
+const API_BASE = "http://localhost:8001"
 
 interface StepEvent {
     type: "step" | "file" | "execute" | "lint" | "error" | "done" | "report"

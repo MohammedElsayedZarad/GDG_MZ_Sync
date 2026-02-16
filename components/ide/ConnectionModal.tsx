@@ -29,7 +29,7 @@ export default function ConnectionModal({ isOpen, onClose, onConnect }: Connecti
             if (!url || typeof url !== 'string' || !url.includes("github.com")) return;
             setLoadingBranches(true);
             try {
-                const res = await fetch("http://127.0.0.1:8000/api/repo/branches", {
+                const res = await fetch("http://127.0.0.1:8001/api/repo/branches", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ github_url: url, access_token: token }),

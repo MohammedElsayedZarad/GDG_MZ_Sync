@@ -59,9 +59,9 @@ echo ═════════════════════════
 echo Starting Backend Server...
 echo ═══════════════════════════════════════════════════════════
 echo.
-echo API will be available at: http://localhost:8000
-echo API docs will be at:       http://localhost:8000/docs
-echo Health check at:            http://localhost:8000/health
+echo API will be available at: http://localhost:8001
+echo API docs will be at:       http://localhost:8001/docs
+echo Health check at:            http://localhost:8001/health
 echo.
 echo [INFO] Starting server in 3 seconds...
 echo [INFO] Press Ctrl+C to stop the server
@@ -72,4 +72,4 @@ echo ═════════════════════════
 echo.
 
 REM Start the server
-uvicorn api:app --reload --port 8000
+uvicorn api:app --reload --port 8001

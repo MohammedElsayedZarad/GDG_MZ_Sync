@@ -7,7 +7,7 @@ import requests
 import json
 import time
 
-backend_url = "http://127.0.0.1:8000"
+backend_url = "http://127.0.0.1:8001"
 
 print("=" * 60)
 print("TESTING DIRECT BACKEND API CONNECTION")
@@ -57,7 +57,7 @@ except requests.exceptions.Timeout:
     
 except requests.exceptions.ConnectionError as e:
     print(f"\n❌ CONNECTION ERROR: {e}")
-    print("   Make sure the backend is running on http://127.0.0.1:8000")
+    print("   Make sure the backend is running on http://127.0.0.1:8001")
     
 except Exception as e:
     print(f"\n❌ UNEXPECTED ERROR: {e}")

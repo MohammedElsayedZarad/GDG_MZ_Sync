@@ -52,9 +52,9 @@ echo "════════════════════════�
 echo "Starting Backend Server..."
 echo "═══════════════════════════════════════════════════════════"
 echo ""
-echo "API will be available at: http://localhost:8000"
-echo "API docs will be at:       http://localhost:8000/docs"
-echo "Health check at:            http://localhost:8000/health"
+echo "API will be available at: http://localhost:8001"
+echo "API docs will be at:       http://localhost:8001/docs"
+echo "Health check at:            http://localhost:8001/health"
 echo ""
 echo "[INFO] Starting server..."
 echo "[INFO] Press Ctrl+C to stop the server"
@@ -63,4 +63,4 @@ echo "════════════════════════�
 echo ""
 
 # Start the server
-python3 -m uvicorn api:app --reload --port 8000
+python3 -m uvicorn api:app --reload --port 8001

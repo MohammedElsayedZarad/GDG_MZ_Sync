@@ -152,11 +152,8 @@ export function ProjectPageClient({ task }: ProjectPageClientProps) {
         }
     }
 
-    useEffect(() => {
-        if (hasStarted && !simulation && !isLoading) {
-            generate()
-        }
-    }, [hasStarted, simulation, isLoading, generate])
+    // useEffect removed to prevent infinite loop
+
 
     // ── Configuration Screen ──
     if (!hasStarted) {
@@ -215,7 +212,8 @@ export function ProjectPageClient({ task }: ProjectPageClientProps) {
                                         return
                                     }
                                     setHasStarted(true)
-                                    setIsLoading(true)
+                                    // Manually trigger generation exactly once
+                                    await generate()
                                 } catch {
                                     setCreditError("Something went wrong. Please try again.")
                                 } finally {
